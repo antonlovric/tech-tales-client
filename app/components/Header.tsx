@@ -1,10 +1,8 @@
 import React from 'react';
 import Image from 'next/image';
-import { Exo } from 'next/font/google';
 import Link from 'next/link';
 import ProfileIcon from './ProfileIcon';
-
-const exo = Exo({ subsets: ['latin'] });
+import { exo } from '../layout';
 
 const Header = () => {
   return (
