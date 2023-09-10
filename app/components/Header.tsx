@@ -2,6 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import { Exo } from 'next/font/google';
 import Link from 'next/link';
+import ProfileIcon from './ProfileIcon';
 
 const exo = Exo({ subsets: ['latin'] });
 
@@ -47,13 +48,7 @@ const Header = () => {
           />
           <Image alt="search icon" src={'search.svg'} width={27} height={27} />
         </form>
-        <Image
-          src={'/mock-profile.jpeg'}
-          height={30}
-          width={30}
-          className="rounded-full object-cover h-[40px] w-[40px]"
-          alt="profile image"
-        />
+        <ProfileIcon />
       </div>
     </header>
   );
