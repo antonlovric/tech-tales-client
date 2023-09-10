@@ -8,7 +8,7 @@ const exo = Exo({ subsets: ['latin'] });
 const Header = () => {
   return (
     <header
-      className={`${exo.className} bg-dark text-white flex items-center justify-between p-4`}
+      className={`${exo.className} bg-dark text-white flex items-center justify-between`}
     >
       <nav className="flex items-center">
         <div className="flex items-center gap-2">

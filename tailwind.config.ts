@@ -17,6 +17,11 @@ const config: Config = {
         dark: '#171717',
         'dark-gray': '#212121',
         'light-gray': '#868686',
+        'blog-blue': '#007BFF',
+      },
+      fontSize: {
+        heading: '2.5rem',
+        subheading: '2rem',
       },
     },
   },

@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import Header from './components/Header';
 
-const inter = Inter({ subsets: ['latin'] });
+export const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Tech Tales',
@@ -18,9 +18,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-dark text-white`}>
+      <body className={`${inter.className} bg-dark text-white px-8 py-5`}>
         <Header></Header>
-        <main>{children}</main>
+        <section className="mt-10">{children}</section>
       </body>
     </html>
   );
