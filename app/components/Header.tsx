@@ -13,7 +13,7 @@ const Header = () => {
       <nav className="flex items-center">
         <div className="flex items-center gap-2">
           <Image src={'logo.svg'} width={50} height={50} alt="Blog Logo" />
-          <p className="font-semibold text-xl">Tech Tales</p>
+          <span className="font-semibold text-xl">Tech Tales</span>
         </div>
         <span className="ml-7">
           <ul className="flex items-center gap-2">
@@ -51,7 +51,7 @@ const Header = () => {
           width={30}
           className="rounded-full object-cover h-[40px] w-[40px]"
           alt="profile image"
-        ></Image>
+        />
       </div>
     </header>
   );
