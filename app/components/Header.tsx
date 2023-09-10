@@ -12,10 +12,12 @@ const Header = () => {
     >
       <nav className="flex items-center">
         <div className="flex items-center gap-2">
-          <Image src={'logo.svg'} width={50} height={50} alt="Blog Logo" />
+          <Link href={'/'}>
+            <Image src={'logo.svg'} width={50} height={50} alt="Blog Logo" />
+          </Link>
           <span className="font-semibold text-xl">Tech Tales</span>
         </div>
-        <span className="ml-7">
+        <span className="ml-4">
           <ul className="flex items-center gap-2">
             <li>
               <Link href={'#'}>Home</Link>
@@ -35,7 +37,7 @@ const Header = () => {
       <div className="flex items-center gap-5">
         <form
           action=""
-          className="flex items-center gap-2 bg-dark-gray p-2 rounded-md"
+          className="flex items-center gap-2 bg-dark-gray p-2 rounded-md border-2 border-transparent focus-within:border-light-gray"
         >
           <input
             type="text"
