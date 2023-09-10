@@ -1,4 +1,4 @@
-import FeaturedPost from './components/FeaturedPost';
+import FeaturedPost from '../components/FeaturedPost';
 import { inter } from './layout';
 
 export default function Home() {
