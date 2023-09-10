@@ -33,7 +33,7 @@ const ProfileIcon = () => {
         />
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
-        <DropdownMenu.Content>
+        <DropdownMenu.Content className="mr-5 mt-1 bg-dark-gray p-2 rounded-md">
           <DropdownMenu.Arrow></DropdownMenu.Arrow>
           <DropdownMenu.Item
             className="py-2 px-1 cursor-pointer"
