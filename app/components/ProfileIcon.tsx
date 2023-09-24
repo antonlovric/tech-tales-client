@@ -4,15 +4,18 @@ import React from 'react';
 import Image from 'next/image';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { ExitIcon, FilePlusIcon, PersonIcon } from '@radix-ui/react-icons';
+import { useClerk } from '@clerk/nextjs';
 
 interface IProfileIcon {
   profileImage: string;
 }
 
 const ProfileIcon = ({ profileImage }: IProfileIcon) => {
+  const { signOut } = useClerk();
+
   const handleProfileClick = () => {};
   const handleAddPost = () => {};
-  const handleLogout = () => {};
+  const handleLogout = signOut;
 
   const handleSelect = (e: any) => {
     switch (e.originalTarget.attributes.itemid.value) {
