@@ -1,12 +1,15 @@
 import React from 'react';
 import Image from 'next/image';
-import { Exo } from 'next/font/google';
 import Link from 'next/link';
 import ProfileIcon from './ProfileIcon';
+import { exo } from '../layout';
+import { currentUser } from '@clerk/nextjs/server';
 
-const exo = Exo({ subsets: ['latin'] });
+const Header = async () => {
+  const user = await currentUser();
+  const isSignedIn = !!user;
+  const profileImage = user?.imageUrl || '/mock-profile.jpeg';
 
-const Header = () => {
   return (
     <header
       className={`${exo.className} bg-dark text-white flex items-center justify-between`}
@@ -48,7 +51,24 @@ const Header = () => {
           />
           <Image alt="search icon" src={'search.svg'} width={27} height={27} />
         </form>
-        <ProfileIcon />
+        {isSignedIn ? (
+          <ProfileIcon profileImage={profileImage} />
+        ) : (
+          <div className="flex items-center gap-2">
+            <Link
+              className="border border-slate-700 px-3 py-2 rounded-md"
+              href={'/sign-in'}
+            >
+              <p>Sign In</p>
+            </Link>
+            <Link
+              className="bg-slate-700 px-3 py-2 rounded-md"
+              href={'/sign-up'}
+            >
+              <p>Sign Up</p>
+            </Link>
+          </div>
+        )}
       </div>
     </header>
   );
