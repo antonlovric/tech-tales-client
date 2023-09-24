@@ -1,7 +1,7 @@
 import FeaturedPost from '../components/FeaturedPost';
 import { inter } from './layout';
 
-export default function Home() {
+export default async function Home() {
   return (
     <div className={inter.className}>
       <h1 className="text-heading">

@@ -3,8 +3,12 @@ import Image from 'next/image';
 import Link from 'next/link';
 import ProfileIcon from './ProfileIcon';
 import { exo } from '../layout';
+import { currentUser } from '@clerk/nextjs/server';
 
-const Header = () => {
+const Header = async () => {
+  const user = await currentUser();
+  const profileImage = user?.imageUrl || '/mock-profile.jpeg';
+
   return (
     <header
       className={`${exo.className} bg-dark text-white flex items-center justify-between`}
@@ -46,7 +50,7 @@ const Header = () => {
           />
           <Image alt="search icon" src={'search.svg'} width={27} height={27} />
         </form>
-        <ProfileIcon />
+        <ProfileIcon profileImage={profileImage} />
       </div>
     </header>
   );

@@ -5,7 +5,11 @@ import Image from 'next/image';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { ExitIcon, FilePlusIcon, PersonIcon } from '@radix-ui/react-icons';
 
-const ProfileIcon = () => {
+interface IProfileIcon {
+  profileImage: string;
+}
+
+const ProfileIcon = ({ profileImage }: IProfileIcon) => {
   const handleProfileClick = () => {};
   const handleAddPost = () => {};
   const handleLogout = () => {};
@@ -25,7 +29,7 @@ const ProfileIcon = () => {
     <DropdownMenu.Root>
       <DropdownMenu.Trigger>
         <Image
-          src={'/mock-profile.jpeg'}
+          src={profileImage}
           height={30}
           width={30}
           className="rounded-full object-cover h-[40px] w-[40px] cursor-pointer"
