@@ -7,9 +7,8 @@ import { redirect } from 'next/navigation';
 
 const SignInPage = async () => {
   const user = await currentUser();
-  if (!!user) redirect('/');
 
-  return (
+  return !user ? (
     <main className="grid grid-cols-3 relative h-screen">
       <div className="relative h-full col-span-1">
         <div className="absolute bg-black h-full w-full z-10 opacity-70"></div>
@@ -35,6 +34,8 @@ const SignInPage = async () => {
         <SignIn />
       </div>
     </main>
+  ) : (
+    <>{redirect('/')}</>
   );
 };
 
