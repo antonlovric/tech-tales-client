@@ -2,6 +2,11 @@ import React from 'react';
 import { SignUp } from '@clerk/nextjs';
 import Image from 'next/image';
 import { exo } from '@/app/layout';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Tech Tales | Sign up',
+};
 
 const SignUpPage = () => {
   return (

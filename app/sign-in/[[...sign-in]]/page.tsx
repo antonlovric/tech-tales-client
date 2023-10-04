@@ -4,6 +4,11 @@ import { exo } from '@/app/layout';
 import { SignIn } from '@clerk/nextjs';
 import { currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Tech Tales | Sign in',
+};
 
 const SignInPage = async () => {
   const user = await currentUser();

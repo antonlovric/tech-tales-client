@@ -1,5 +1,10 @@
+import { Metadata } from 'next';
 import FeaturedPost from '../components/FeaturedPost';
 import { inter } from './layout';
+
+export const metadata: Metadata = {
+  title: 'Tech Tales | Home',
+};
 
 export default async function Home() {
   return (
