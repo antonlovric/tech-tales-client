@@ -30,7 +30,7 @@ const Header = async () => {
               <Link href={'#'}>About</Link>
             </li>
             <li>
-              <Link href={'#'}>Posts</Link>
+              <Link href={'/posts'}>Posts</Link>
             </li>
             <li>
               <Link href={'#'}>Contact</Link>
