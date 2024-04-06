@@ -3,7 +3,7 @@ import React from 'react';
 
 const FeaturedPost = () => {
   return (
-    <article className="grid grid-cols-2 gap-x-8 w-4/6 mx-auto mt-10">
+    <article className="grid grid-cols-2 gap-x-8 w-5/6 mx-auto mt-10">
       <Image
         alt="Blog image"
         src={'/mock-blog-image.webp'}
