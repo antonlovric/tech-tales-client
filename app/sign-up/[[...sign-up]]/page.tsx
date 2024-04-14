@@ -1,14 +1,35 @@
 import React from 'react';
-import { SignUp } from '@clerk/nextjs';
 import Image from 'next/image';
 import { exo } from '@/app/layout';
 import { Metadata } from 'next';
+import SignUpForm, { IUserSignUpForm } from '@/app/components/SignUpForm';
+import { prisma } from '@/app/helpers/api';
+import { hash } from 'argon2';
+import { redirect } from 'next/navigation';
 
 export const metadata: Metadata = {
   title: 'Tech Tales | Sign up',
 };
 
 const SignUpPage = () => {
+  async function handleSignUp(values: IUserSignUpForm) {
+    'use server';
+    const userExist = await prisma.users.findFirst({
+      where: { email: values.email },
+    });
+    if (!userExist) {
+      await prisma.users.create({
+        data: {
+          first_name: values.firstName,
+          last_name: values.lastName,
+          email: values.email,
+          password: await hash(values.password),
+        },
+      });
+      redirect('/');
+    }
+  }
+
   return (
     <main className="grid grid-cols-3 relative h-screen">
       <div className="relative h-full col-span-1">
@@ -29,10 +50,11 @@ const SignUpPage = () => {
           height={0}
           width={0}
           layout="fill"
+          objectFit="cover"
         />
       </div>
       <div className="flex items-center justify-center col-span-2">
-        <SignUp />
+        <SignUpForm handleSignUp={handleSignUp} />
       </div>
     </main>
   );
