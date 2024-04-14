@@ -5,6 +5,7 @@ import Image from 'next/image';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { ExitIcon, FilePlusIcon, PersonIcon } from '@radix-ui/react-icons';
 import { useClerk } from '@clerk/nextjs';
+import Link from 'next/link';
 
 interface IProfileIcon {
   profileImage: string;
@@ -57,10 +58,10 @@ const ProfileIcon = ({ profileImage }: IProfileIcon) => {
             onSelect={handleSelect}
             itemID="add-post"
           >
-            <div className="flex items-center gap-2">
+            <Link href={'create-post'} className="flex items-center gap-2">
               <FilePlusIcon />
-              <p>Add Post</p>
-            </div>
+              <p>Create Post</p>
+            </Link>
           </DropdownMenu.Item>
           <DropdownMenu.Item
             className="py-2 px-1 cursor-pointer"
