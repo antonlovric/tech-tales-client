@@ -1,22 +1,19 @@
 'use client';
 import React, { useState } from 'react';
 
-export interface IUserSignUpForm {
-  firstName: string;
-  lastName: string;
+export interface IUserSignInForm {
   email: string;
   password: string;
 }
 
-interface ISignUpForm {
-  handleSignUp: (user: IUserSignUpForm) => void;
+interface ISignInForm {
+  handleSignIn: (user: IUserSignInForm) => void;
+  errorMessage?: string;
 }
 
-const SignUpForm = ({ handleSignUp }: ISignUpForm) => {
-  const [formValues, setFormValues] = useState<IUserSignUpForm>({
+const SignInForm = ({ handleSignIn, errorMessage }: ISignInForm) => {
+  const [formValues, setFormValues] = useState<IUserSignInForm>({
     email: '',
-    firstName: '',
-    lastName: '',
     password: '',
   });
 
@@ -24,11 +21,7 @@ const SignUpForm = ({ handleSignUp }: ISignUpForm) => {
     e.preventDefault();
 
     const { value, id } = e.target;
-    if (id === 'firstName') {
-      setFormValues({ ...formValues, firstName: value });
-    } else if (id === 'lastName') {
-      setFormValues({ ...formValues, lastName: value });
-    } else if (id === 'email') {
+    if (id === 'email') {
       setFormValues({ ...formValues, email: value });
     } else if (id === 'password') {
       setFormValues({ ...formValues, password: value });
@@ -36,30 +29,13 @@ const SignUpForm = ({ handleSignUp }: ISignUpForm) => {
   }
 
   function submitUser() {
-    handleSignUp(formValues);
+    handleSignIn(formValues);
   }
 
   return (
     <form action={submitUser} className="flex flex-col gap-2">
       <div className="flex flex-col gap-1 align-center">
         <label htmlFor="firstName">First name</label>
-        <input
-          onChange={handleUpdateForm}
-          type="text"
-          id="firstName"
-          value={formValues.firstName}
-          className="text-black rounded-md py-1 px-2"
-        />
-      </div>
-      <div className="flex flex-col gap-1 align-center">
-        <label htmlFor="lastName">Last name</label>
-        <input
-          onChange={handleUpdateForm}
-          type="text"
-          id="lastName"
-          value={formValues.lastName}
-          className="text-black rounded-md py-1 px-2"
-        />
       </div>
       <div className="flex flex-col gap-1 align-center">
         <label htmlFor="email">Email</label>
@@ -81,9 +57,10 @@ const SignUpForm = ({ handleSignUp }: ISignUpForm) => {
           className="text-black rounded-md py-1 px-2"
         />
       </div>
-      <button type="submit">Sign Up</button>
+      {errorMessage ? 'Invalid credentials' : ''}
+      <button type="submit">Sign In</button>
     </form>
   );
 };
 
-export default SignUpForm;
+export default SignInForm;

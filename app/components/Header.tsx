@@ -1,15 +1,12 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import ProfileIcon from './ProfileIcon';
 import { exo } from '../layout';
-import { currentUser } from '@clerk/nextjs/server';
+import { getIsLoggedIn } from '../helpers/auth';
+import ProfileIcon from './ProfileIcon';
 
 const Header = async () => {
-  const user = await currentUser();
-  const isSignedIn = !!user;
-  const profileImage = user?.imageUrl || '/mock-profile.jpeg';
-
+  const isLoggedIn = getIsLoggedIn();
   return (
     <header
       className={`${exo.className} bg-dark text-white flex items-center justify-between`}
@@ -51,8 +48,8 @@ const Header = async () => {
           />
           <Image alt="search icon" src={'search.svg'} width={27} height={27} />
         </form>
-        {isSignedIn ? (
-          <ProfileIcon profileImage={profileImage} />
+        {isLoggedIn ? (
+          <ProfileIcon />
         ) : (
           <div className="flex items-center gap-2">
             <Link

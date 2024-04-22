@@ -1,19 +1,52 @@
 import React from 'react';
 import Image from 'next/image';
 import { exo } from '@/app/layout';
-import { SignIn } from '@clerk/nextjs';
-import { currentUser } from '@clerk/nextjs/server';
-import { redirect } from 'next/navigation';
 import { Metadata } from 'next';
+import SignInForm, { IUserSignInForm } from '@/app/components/SignInForm';
+import { verify } from 'argon2';
+import { prisma } from '@/app/helpers/api';
+import { SignJWT } from 'jose';
+import { HASH_ALG, getSecretKey } from '@/app/helpers/auth';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
+import dayjs from 'dayjs';
 
 export const metadata: Metadata = {
   title: 'Tech Tales | Sign in',
 };
 
 const SignInPage = async () => {
-  const user = await currentUser();
+  async function handleSignIn(values: IUserSignInForm) {
+    'use server';
+    const user = await prisma.users.findFirst({
+      where: { email: values.email },
+    });
+    if (!user) {
+      return;
+    }
+    const isValidSignIn = await verify(user.password, values.password);
+    if (!isValidSignIn) {
+      return;
+    }
+    const token = await new SignJWT({
+      jti: user.email,
+    })
+      .setProtectedHeader({ alg: HASH_ALG })
+      .setIssuedAt()
+      .setExpirationTime('2h')
+      .sign(getSecretKey());
+    cookies().set('auth', token, {
+      httpOnly: true,
+      sameSite: true,
+      value: token,
+      expires: dayjs().add(2, 'hours').toDate(),
+      path: '/',
+    });
 
-  return !user ? (
+    redirect('/');
+  }
+
+  return (
     <main className="grid grid-cols-3 relative h-screen">
       <div className="relative h-full col-span-1">
         <div className="absolute bg-black h-full w-full z-10 opacity-70"></div>
@@ -36,11 +69,9 @@ const SignInPage = async () => {
         />
       </div>
       <div className="flex items-center justify-center col-span-2">
-        <SignIn />
+        <SignInForm handleSignIn={handleSignIn} />
       </div>
     </main>
-  ) : (
-    <>{redirect('/')}</>
   );
 };
 

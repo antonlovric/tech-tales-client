@@ -1,8 +1,9 @@
-import { authMiddleware } from '@clerk/nextjs';
+import { cookies } from 'next/headers';
+import { NextRequest } from 'next/server';
 
-export default authMiddleware({
-  publicRoutes: ['/'],
-});
+export function middleware(request: NextRequest) {
+  const authCookie = cookies().get('auth');
+}
 
 export const config = {
   matcher: ['/((?!.*\\..*|_next).*)', '/', '/(api|trpc)(.*)'],
