@@ -8,12 +8,15 @@ import Link from 'next/link';
 
 interface IProfileIcon {
   profileImage?: string;
+  logout: () => void;
 }
 
-const ProfileIcon = ({ profileImage }: IProfileIcon) => {
+const ProfileIcon = ({ profileImage, logout }: IProfileIcon) => {
   const handleProfileClick = () => {};
   const handleAddPost = () => {};
-  const handleLogout = () => {};
+  function handleLogout() {
+    logout();
+  }
 
   const handleSelect = (e: any) => {
     switch (e.originalTarget.attributes.itemid.value) {

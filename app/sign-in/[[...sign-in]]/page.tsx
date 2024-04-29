@@ -42,6 +42,11 @@ const SignInPage = async () => {
       expires: dayjs().add(2, 'hours').toDate(),
       path: '/',
     });
+    cookies().set('user', JSON.stringify(user), {
+      expires: dayjs().add(2, 'hours').toDate(),
+      path: '/',
+      value: JSON.stringify(user),
+    });
 
     redirect('/');
   }
