@@ -43,10 +43,11 @@ model post_tags {
 model posts {
   id                             Int               @id @default(autoincrement())
   title                          String?           @db.VarChar(45)
-  content                        String?           @db.VarChar(45)
   summary                        String?           @db.VarChar(45)
   users_id                       Int
   reviewer_id                    Int?
+  html_content                   String?
+  json_content                   Json?             @db.Json
   comments                       comments[]
   post_categories                post_categories[]
   post_tags                      post_tags[]
