@@ -48,6 +48,7 @@ model posts {
   reviewer_id                    Int?
   html_content                   String?
   json_content                   Json?             @db.Json
+  cover_image                    String?
   comments                       comments[]
   post_categories                post_categories[]
   post_tags                      post_tags[]

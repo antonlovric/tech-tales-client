@@ -4,7 +4,7 @@ import React from 'react';
 import Image from 'next/image';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { ExitIcon, FilePlusIcon, PersonIcon } from '@radix-ui/react-icons';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 interface IProfileIcon {
   profileImage?: string;
@@ -12,8 +12,11 @@ interface IProfileIcon {
 }
 
 const ProfileIcon = ({ profileImage, logout }: IProfileIcon) => {
+  const router = useRouter();
   const handleProfileClick = () => {};
-  const handleAddPost = () => {};
+  const handleAddPost = () => {
+    router.push('create-post');
+  };
   function handleLogout() {
     logout();
   }
@@ -58,10 +61,10 @@ const ProfileIcon = ({ profileImage, logout }: IProfileIcon) => {
             onSelect={handleSelect}
             itemID="add-post"
           >
-            <Link href={'create-post'} className="flex items-center gap-2">
+            <div className="flex items-center gap-2">
               <FilePlusIcon />
               <p>Create Post</p>
-            </Link>
+            </div>
           </DropdownMenu.Item>
           <DropdownMenu.Item
             className="py-2 px-1 cursor-pointer"
