@@ -3,7 +3,11 @@
 import { usePathname, useRouter } from 'next/navigation';
 import React, { FormEvent, useTransition } from 'react';
 
-const PostsSearch = () => {
+interface IPostsSearch {
+  initialValue?: string;
+}
+
+const PostsSearch = ({ initialValue }: IPostsSearch) => {
   const [isPending, setTransition] = useTransition();
   const { replace } = useRouter();
   const pathname = usePathname();
@@ -31,6 +35,7 @@ const PostsSearch = () => {
         name="search"
         placeholder="Start your journey"
         className="bg-dark-gray focus:outline-none border-blog px-3 py-2 col-span-7 rounded-md"
+        defaultValue={initialValue || ''}
       />
       <button type="submit" className="button-primary">
         {isPending ? 'Loading' : 'Search'}

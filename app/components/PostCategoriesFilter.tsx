@@ -37,8 +37,6 @@ const PostCategoriesFilter = ({ categories }: IPostCategoriesFilter) => {
       );
     } else params.delete(CATEGORY_FILTER_KEY);
     setTransition(() => {
-      console.log('replacing');
-
       router.replace(`${pathname}?${params.toString()}`);
     });
   };

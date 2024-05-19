@@ -4,7 +4,45 @@ import PostsSearch from '@/app/components/PostsSearch';
 import { prisma } from '@/app/helpers/api';
 import React from 'react';
 
-const Posts = async () => {
+export interface ISearchParams {
+  categories?: string;
+  search?: string;
+}
+
+interface IPostsPage {
+  searchParams: ISearchParams;
+}
+
+const Posts = async ({ searchParams }: IPostsPage) => {
+  const parsedSearchQuery = decodeURIComponent(searchParams?.search || '');
+  const parsedCategoriesQuery: number[] = JSON.parse(
+    decodeURIComponent(searchParams?.categories || '[]')
+  );
+  const whereClause: any = {};
+  if (parsedSearchQuery) {
+    whereClause['OR'] = [
+      {
+        title: {
+          contains: parsedSearchQuery,
+          mode: 'insensitive',
+        },
+      },
+    ];
+  }
+
+  if (parsedCategoriesQuery.length > 0) {
+    whereClause['OR'] = whereClause['OR'] || [];
+    whereClause['OR'].push({
+      post_categories: {
+        some: {
+          categories_id: {
+            in: parsedCategoriesQuery,
+          },
+        },
+      },
+    });
+  }
+
   const posts = await prisma.posts.findMany({
     include: {
       author: true,
@@ -14,6 +52,7 @@ const Posts = async () => {
         },
       },
     },
+    where: whereClause,
   });
 
   const categories = await prisma.categories.findMany();
@@ -25,7 +64,7 @@ const Posts = async () => {
         <h2 className="text-center text-3xl font-extralight">
           Today&apos;s stories for tomorrow&apos;s tech
         </h2>
-        <PostsSearch />
+        <PostsSearch initialValue={parsedSearchQuery} />
       </div>
       <PostCategoriesFilter categories={categories} />
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-55">
