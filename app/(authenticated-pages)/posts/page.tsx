@@ -2,6 +2,7 @@ import PostCard from '@/app/components/PostCard';
 import PostCategoriesFilter from '@/app/components/PostCategoriesFilter';
 import PostsSearch from '@/app/components/PostsSearch';
 import { prisma } from '@/app/helpers/api';
+import Link from 'next/link';
 import React from 'react';
 
 export interface ISearchParams {
@@ -69,7 +70,9 @@ const Posts = async ({ searchParams }: IPostsPage) => {
       <PostCategoriesFilter categories={categories} />
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-55">
         {posts.map((post) => (
-          <PostCard post={post} key={post.id} />
+          <Link href={`/post/${post.id}`} key={post.id}>
+            <PostCard post={post} />
+          </Link>
         ))}
       </div>
     </div>
