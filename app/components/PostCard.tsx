@@ -27,26 +27,28 @@ const PostCard = ({ post }: IPostCard) => {
   });
 
   return (
-    <div className="border border-white rounded-md p-2 w-[400px] cursor-pointer">
-      <div className="w-full relative">
-        <img
-          src={post.cover_image || ''}
-          alt={post.title + ' cover image'}
-          className="block rounded-md h-[250px] w-[400px] object-cover"
-        />
-        <div className="absolute flex items-center gap-2 bottom-2 right-2">
-          {post.post_categories.map((postCategory) => (
-            <div
-              className="text-xs bg-blog-blue px-1 rounded-sm"
-              key={postCategory.categories.id}
-            >
-              {postCategory.categories.name}
-            </div>
-          ))}
+    <div className="border border-white rounded-md p-2 w-[400px] cursor-pointer h-full flex flex-col justify-between">
+      <div>
+        <div className="w-full relative">
+          <img
+            src={post.cover_image || ''}
+            alt={post.title + ' cover image'}
+            className="block rounded-md h-[250px] w-[400px] object-cover"
+          />
+          <div className="absolute flex items-center gap-2 bottom-2 right-2">
+            {post.post_categories.map((postCategory) => (
+              <div
+                className="text-xs bg-blog-blue px-1 rounded-sm"
+                key={postCategory.categories.id}
+              >
+                {postCategory.categories.name}
+              </div>
+            ))}
+          </div>
         </div>
+        <EditorContent className="font-semibold" editor={titleEditor} />
+        <p className="">{post.summary}</p>
       </div>
-      <EditorContent className="font-semibold" editor={titleEditor} />
-      <p className="">{post.summary}</p>
       <div className="flex items-center justify-between">
         <p>
           {post.author.first_name} {post.author.last_name}
