@@ -15,7 +15,7 @@ const Header = async () => {
       <nav className="flex items-center">
         <div className="flex items-center gap-2">
           <Link href={'/'}>
-            <Image src={'logo.svg'} width={50} height={50} alt="Blog Logo" />
+            <Image src={'/logo.svg'} width={50} height={50} alt="Blog Logo" />
           </Link>
           <span className="font-semibold text-xl">Tech Tales</span>
         </div>
@@ -47,7 +47,7 @@ const Header = async () => {
             placeholder="Search"
             className="bg-transparent focus:outline-none px-2"
           />
-          <Image alt="search icon" src={'search.svg'} width={27} height={27} />
+          <Image alt="search icon" src={'/search.svg'} width={27} height={27} />
         </form>
         {isLoggedIn ? (
           <ProfileIcon logout={logout} />

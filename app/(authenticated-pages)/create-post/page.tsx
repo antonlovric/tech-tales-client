@@ -58,7 +58,7 @@ const CreatePost = async () => {
     const strippedImage = image.replace(/^data:image\/\w+;base64,/, '');
     const buffer = Buffer.from(strippedImage, 'base64');
     const databasePath =
-      path.join('uploads', 'cover-images', new Date().getTime().toString()) +
+      path.join('/uploads', 'cover-images', new Date().getTime().toString()) +
       '.png';
     const uploadPath = path.join(process.cwd(), 'public', databasePath);
     await fs.promises.writeFile(uploadPath, buffer);
