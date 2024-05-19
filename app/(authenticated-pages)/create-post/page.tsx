@@ -26,7 +26,7 @@ const CreatePost = async () => {
     try {
       const activeUser = getActiveUser();
       if (activeUser?.id) {
-        await prisma.posts.create({
+        const res = await prisma.posts.create({
           data: {
             html_content: props.html_content,
             json_content: props.json_content,
@@ -34,7 +34,11 @@ const CreatePost = async () => {
             title: props.title,
             post_categories: {
               create: props.categoryIds.map((categoryId) => ({
-                categories_id: categoryId,
+                categories: {
+                  connect: {
+                    id: categoryId,
+                  },
+                },
               })),
             },
             users_id: activeUser.id,
@@ -59,43 +63,6 @@ const CreatePost = async () => {
     const uploadPath = path.join(process.cwd(), 'public', databasePath);
     await fs.promises.writeFile(uploadPath, buffer);
     return databasePath;
-  }
-
-  async function uploadCoverImage(imageData: FormData) {
-    'use server';
-    const image = imageData.get('image') as File;
-    if (image) {
-      try {
-        const uploadPath = path.join(
-          process.cwd(),
-          'public',
-          'uploads',
-          'cover-images',
-          image.name + '.png'
-        );
-        const arrayBuffer = await image.arrayBuffer();
-        const imageBuffer = new Uint8Array(arrayBuffer);
-        await fs.promises.writeFile(uploadPath, imageBuffer);
-        return { imagePath: '/uploads/cover-images/' + image.name };
-      } catch (error) {
-        console.error('ERROR UPLOADING FILE');
-        console.error(error);
-        throw error;
-      }
-    }
-  }
-
-  async function deleteImage(relativeImagePath: string) {
-    'use server';
-    try {
-      const absolutePath = path.resolve(relativeImagePath);
-      console.log(absolutePath);
-
-      await fs.promises.unlink(absolutePath);
-    } catch (error) {
-      console.error('ERROR DELETING FILE');
-      throw error;
-    }
   }
 
   return (

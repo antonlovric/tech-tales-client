@@ -159,7 +159,7 @@ const TextEditor = ({
       <div className="flex items-center gap-2">
         <button onClick={toggleBold}>Bold</button>
       </div>
-      <EditorContent editor={bodyEditor} className="text-xl" />
+      <EditorContent editor={bodyEditor} className="text-md leading-6" />
       <div className="mt-5">
         <button onClick={handleSubmit} className="button-primary">
           Submit

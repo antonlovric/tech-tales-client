@@ -1,29 +1,57 @@
-import { posts, users } from '@prisma/client';
+'use client';
+
+import { categories, posts, users } from '@prisma/client';
+import { EditorContent, useEditor } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
+import dayjs from 'dayjs';
 import React from 'react';
 
-interface IPostWithAuthor extends posts {
+interface IPostCategories {
+  categories: categories;
+}
+
+interface IExtendedPost extends posts {
   author: users;
+  post_categories: IPostCategories[];
 }
 
 interface IPostCard {
-  post: IPostWithAuthor;
+  post: IExtendedPost;
 }
 
 const PostCard = ({ post }: IPostCard) => {
+  const titleEditor = useEditor({
+    editable: false,
+    content: post.title,
+    extensions: [StarterKit],
+  });
+
   return (
-    <div className="border border-white rounded-md p-2">
-      <img
-        src={post.cover_image || ''}
-        alt={post.title + ' cover image'}
-        className="w-full block rounded-md"
-      />
-      <p className="">{post.title}</p>
+    <div className="border border-white rounded-md p-2 w-[400px] cursor-pointer">
+      <div className="w-full relative">
+        <img
+          src={post.cover_image || ''}
+          alt={post.title + ' cover image'}
+          className="block rounded-md h-[250px] w-[400px] object-cover"
+        />
+        <div className="absolute flex items-center gap-2 bottom-2 right-2">
+          {post.post_categories.map((postCategory) => (
+            <div
+              className="text-xs bg-blog-blue px-1 rounded-sm"
+              key={postCategory.categories.id}
+            >
+              {postCategory.categories.name}
+            </div>
+          ))}
+        </div>
+      </div>
+      <EditorContent className="font-semibold" editor={titleEditor} />
       <p className="">{post.summary}</p>
       <div className="flex items-center justify-between">
         <p>
           {post.author.first_name} {post.author.last_name}
         </p>
-        <p>22.10.2024.</p>
+        <p>{dayjs(post.created_at).format('DD.MM.YYYY.')}</p>
       </div>
     </div>
   );

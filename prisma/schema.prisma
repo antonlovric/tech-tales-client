@@ -54,7 +54,7 @@ model posts {
   comments                    comments[]
   post_categories             post_categories[]
   post_tags                   post_tags[]
-  users_posts_users_idTousers users             @relation("posts_users_idTousers", fields: [users_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_posts_users")
+  author users             @relation("posts_users_idTousers", fields: [users_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_posts_users")
   reactions                   reactions[]
   saved_posts                 saved_posts[]
 }

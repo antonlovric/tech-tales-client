@@ -8,6 +8,11 @@ const Posts = async () => {
   const posts = await prisma.posts.findMany({
     include: {
       author: true,
+      post_categories: {
+        include: {
+          categories: true,
+        },
+      },
     },
   });
 
