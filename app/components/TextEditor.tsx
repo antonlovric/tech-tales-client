@@ -6,6 +6,7 @@ import type { categories } from '@prisma/client';
 import { ICreatePostRequest } from '../(authenticated-pages)/create-post/page';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import CharacterCount from '@tiptap/extension-character-count';
 
 interface ITextEditor {
   categories?: categories[];
@@ -22,13 +23,13 @@ const TextEditor = ({
   const name = useRef('');
   const router = useRouter();
   const titleEditor = useEditor({
-    extensions: [StarterKit],
+    extensions: [StarterKit, CharacterCount.configure({ limit: 100 })],
     content: '<h1>This is the title of your article!</h1>',
     injectCSS: false,
   });
 
   const summaryEditor = useEditor({
-    extensions: [StarterKit],
+    extensions: [StarterKit, CharacterCount.configure({ limit: 300 })],
     content: '<h2>Write a quick summary!</h2>',
     injectCSS: false,
   });
@@ -38,6 +39,7 @@ const TextEditor = ({
     content: '<p>Hello World! 🌎️</p>',
     injectCSS: false,
   });
+
   const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
 
   const handleSubmit = async () => {
@@ -47,7 +49,7 @@ const TextEditor = ({
       categoryIds: selectedCategories,
       html_content: bodyEditor?.getHTML() || '',
       json_content: bodyEditor?.getJSON() || { type: '', content: [] },
-      summary: '',
+      summary: summaryEditor?.getHTML() || '',
       title: titleEditor?.getHTML() || '',
       coverImagePath,
     });
