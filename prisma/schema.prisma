@@ -42,21 +42,21 @@ model post_tags {
 }
 
 model posts {
-  id                          Int               @id @default(autoincrement())
-  title                       String?           @db.VarChar(45)
-  summary                     String?           @db.VarChar(45)
-  users_id                    Int
-  html_content                String?
-  json_content                Json?             @db.Json
-  cover_image                 String?
-  created_at                  DateTime?         @default(now()) @db.Date
-  edited_at                   DateTime?         @default(now()) @db.Date
-  comments                    comments[]
-  post_categories             post_categories[]
-  post_tags                   post_tags[]
-  author users             @relation("posts_users_idTousers", fields: [users_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_posts_users")
-  reactions                   reactions[]
-  saved_posts                 saved_posts[]
+  id              Int               @id @default(autoincrement())
+  title           String?           @db.VarChar(100)
+  summary         String?           @db.VarChar(300)
+  users_id        Int
+  html_content    String?
+  json_content    Json?             @db.Json
+  cover_image     String?
+  created_at      DateTime?         @default(now()) @db.Date
+  edited_at       DateTime?         @default(now()) @db.Date
+  comments        comments[]
+  post_categories post_categories[]
+  post_tags       post_tags[]
+  author          users             @relation("posts_users_idTousers", fields: [users_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_posts_users")
+  reactions       reactions[]
+  saved_posts     saved_posts[]
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
