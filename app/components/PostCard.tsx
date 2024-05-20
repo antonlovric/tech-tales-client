@@ -4,6 +4,7 @@ import { categories, posts, users } from '@prisma/client';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import React from 'react';
+import { formatDate } from '../helpers/global';
 
 interface IPostCategories {
   categories: categories;
