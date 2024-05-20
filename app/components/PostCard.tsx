@@ -3,7 +3,6 @@
 import { categories, posts, users } from '@prisma/client';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
-import dayjs from 'dayjs';
 import React from 'react';
 
 interface IPostCategories {
@@ -53,7 +52,7 @@ const PostCard = ({ post }: IPostCard) => {
         <p>
           {post.author.first_name} {post.author.last_name}
         </p>
-        <p>{dayjs(post.created_at).format('DD.MM.YYYY.')}</p>
+        <p>{formatDate(post?.created_at)}</p>
       </div>
     </div>
   );

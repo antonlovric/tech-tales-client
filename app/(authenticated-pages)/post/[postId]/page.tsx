@@ -1,4 +1,5 @@
 import { prisma } from '@/app/helpers/api';
+import { formatDate } from '@/app/helpers/global';
 import DOMPurify from 'isomorphic-dompurify';
 import React from 'react';
 
@@ -24,10 +25,11 @@ const Post = async ({ params }: IPostPage) => {
       ></div>
       <div className="flex justify-center flex-col items-center w-[600px] mx-auto">
         <img src={post?.cover_image || ''} alt="Post Cover Image" width={600} />
-        <div className="flex items-center gap-2 justify-end w-full">
+        <div className="flex items-center gap-2 justify-between w-full">
           <p>
             {post?.author.first_name} {post?.author.last_name}
           </p>
+          <p>{formatDate(post?.created_at)}</p>
         </div>
       </div>
       <div
