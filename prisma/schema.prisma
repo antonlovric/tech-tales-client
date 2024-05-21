@@ -91,7 +91,7 @@ model users {
   email       String        @db.VarChar(45)
   password    String        @db.VarChar(256)
   comments    comments[]
-  author      posts[]       @relation("posts_users_idTousers")
+  posts       posts[]       @relation("posts_users_idTousers")
   reactions   reactions[]
   saved_posts saved_posts[]
 }
