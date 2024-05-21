@@ -9,11 +9,18 @@ import { useRouter } from 'next/navigation';
 interface IProfileIcon {
   profileImage?: string;
   logout: () => void;
+  user: any;
 }
 
-const ProfileIcon = ({ profileImage, logout }: IProfileIcon) => {
+const ProfileIcon = ({ profileImage, logout, user }: IProfileIcon) => {
   const router = useRouter();
-  const handleProfileClick = () => {};
+  const handleProfileClick = async () => {
+    try {
+      router.replace(`/profile/${user.id}`);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   const handleAddPost = () => {
     router.replace('create-post');
   };

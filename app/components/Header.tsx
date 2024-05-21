@@ -2,11 +2,12 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { exo } from '../layout';
-import { getIsLoggedIn, logout } from '../helpers/auth';
+import { getActiveUser, getIsLoggedIn, logout } from '../helpers/auth';
 import ProfileIcon from './ProfileIcon';
 
 const Header = async () => {
   const isLoggedIn = getIsLoggedIn();
+  const user = getActiveUser();
 
   return (
     <header
@@ -50,7 +51,7 @@ const Header = async () => {
           <Image alt="search icon" src={'/search.svg'} width={27} height={27} />
         </form>
         {isLoggedIn ? (
-          <ProfileIcon logout={logout} />
+          <ProfileIcon logout={logout} user={user} />
         ) : (
           <div className="flex items-center gap-2">
             <Link
