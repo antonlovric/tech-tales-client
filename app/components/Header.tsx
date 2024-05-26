@@ -9,7 +9,7 @@ import { prisma } from '../helpers/api';
 const Header = async () => {
   const isLoggedIn = getIsLoggedIn();
   const user = getActiveUser();
-  const userProfile = await prisma.users.findFirst({ where: { id: user.id } });
+  const userProfile = await prisma.users.findFirst({ where: { id: user?.id } });
 
   return (
     <header

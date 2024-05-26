@@ -64,7 +64,7 @@ const EditableProfileIcon = ({
         {canEdit ? (
           <>
             <button className="absolute top-0 left-0" onClick={saveChange}>
-              <CheckCircledIcon className="w-[24px] h-[24px] text-green-300"></CheckCircledIcon>
+              <CheckCircledIcon className="w-[24px] h-[24px] text-green-400"></CheckCircledIcon>
             </button>
             <button className="absolute top-0 right-0" onClick={discardChange}>
               <CrossCircledIcon className="w-[24px] h-[24px] text-red-400"></CrossCircledIcon>

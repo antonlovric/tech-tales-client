@@ -11,6 +11,7 @@ import { getActiveUser } from '@/app/helpers/auth';
 import EditableProfileIcon from '@/app/components/EditableProfileIcon';
 import path from 'path';
 import fs from 'fs';
+import ProfileBioEditor from '@/app/components/ProfileBioEditor';
 
 interface IProfilePage {
   params: { userId: string };
@@ -63,6 +64,15 @@ const UserProfile = async ({ params }: IProfilePage) => {
     }
   }
 
+  async function saveProfileBio(bio: string) {
+    'use server';
+    if (profile) {
+      try {
+        await prisma.users.update({ where: { id: profile.id }, data: { bio } });
+      } catch (error) {}
+    }
+  }
+
   return (
     <div>
       <main className="">
@@ -109,11 +119,8 @@ const UserProfile = async ({ params }: IProfilePage) => {
               <></>
             )}
           </div>
-          {profile?.bio ? (
-            <div className="flex flex-col gap-2">
-              <p>About me:</p>
-              <p>{profile?.bio}</p>
-            </div>
+          {!!profile ? (
+            <ProfileBioEditor user={profile} updateUserBio={saveProfileBio} />
           ) : (
             <></>
           )}
