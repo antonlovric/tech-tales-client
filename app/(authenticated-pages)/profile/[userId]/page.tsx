@@ -7,6 +7,10 @@ import {
 } from '@radix-ui/react-icons';
 import PostCard from '@/app/components/PostCard';
 import Link from 'next/link';
+import { getActiveUser } from '@/app/helpers/auth';
+import EditableProfileIcon from '@/app/components/EditableProfileIcon';
+import path from 'path';
+import fs from 'fs';
 
 interface IProfilePage {
   params: { userId: string };
@@ -21,17 +25,52 @@ const UserProfile = async ({ params }: IProfilePage) => {
       },
     },
   });
+  const activeUser = getActiveUser();
+  function getCanEdit() {
+    return activeUser?.id === profile?.id;
+  }
+  const canEdit = getCanEdit();
 
   const profileImageSrc = profile?.profile_image || '/blank_profile_image.svg';
+
+  async function uploadProfileImage(image: string) {
+    'use server';
+    const strippedImage = image.replace(/^data:image\/\w+;base64,/, '');
+    const buffer = Buffer.from(strippedImage, 'base64');
+    const databasePath =
+      path.join('/uploads', 'profile-images', new Date().getTime().toString()) +
+      '.png';
+    const uploadPath = path.join(process.cwd(), 'public', databasePath);
+    await fs.promises.writeFile(uploadPath, buffer);
+    return databasePath;
+  }
+
+  async function saveProfileImage(profileImage: string) {
+    'use server';
+    if (profile) {
+      try {
+        const profileImageUrl = await uploadProfileImage(profileImage);
+        if (profileImageUrl) {
+          const updatedProfile = await prisma.users.update({
+            where: { id: profile.id },
+            data: { profile_image: profileImageUrl },
+          });
+        }
+      } catch (error) {
+        console.error('ERROR');
+        console.error(error);
+      }
+    }
+  }
 
   return (
     <div>
       <main className="">
         <section className="w-9/12 flex flex-col justify-center items-center mx-auto mb-8">
-          <img
-            className="w-[150px] h-[150px] rounded-full object-cover mb-2"
-            src={profileImageSrc}
-            alt="user profile image"
+          <EditableProfileIcon
+            initialProfileIconLink={profileImageSrc}
+            canEdit={canEdit}
+            saveProfileImage={saveProfileImage}
           />
           <p className="mb-4">
             {profile?.first_name} {profile?.last_name}

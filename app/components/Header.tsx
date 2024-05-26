@@ -4,10 +4,12 @@ import Link from 'next/link';
 import { exo } from '../layout';
 import { getActiveUser, getIsLoggedIn, logout } from '../helpers/auth';
 import ProfileIcon from './ProfileIcon';
+import { prisma } from '../helpers/api';
 
 const Header = async () => {
   const isLoggedIn = getIsLoggedIn();
   const user = getActiveUser();
+  const userProfile = await prisma.users.findFirst({ where: { id: user.id } });
 
   return (
     <header
@@ -51,7 +53,7 @@ const Header = async () => {
           <Image alt="search icon" src={'/search.svg'} width={27} height={27} />
         </form>
         {isLoggedIn ? (
-          <ProfileIcon logout={logout} user={user} />
+          <ProfileIcon logout={logout} user={userProfile} />
         ) : (
           <div className="flex items-center gap-2">
             <Link

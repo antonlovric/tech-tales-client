@@ -1,22 +1,24 @@
 'use client';
 
 import React from 'react';
-import Image from 'next/image';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { ExitIcon, FilePlusIcon, PersonIcon } from '@radix-ui/react-icons';
 import { useRouter } from 'next/navigation';
+import { users } from '@prisma/client';
 
 interface IProfileIcon {
   profileImage?: string;
   logout: () => void;
-  user: any;
+  user: users | null;
 }
 
 const ProfileIcon = ({ profileImage, logout, user }: IProfileIcon) => {
   const router = useRouter();
   const handleProfileClick = async () => {
     try {
-      router.replace(`/profile/${user.id}`);
+      if (user) {
+        router.replace(`/profile/${user.id}`);
+      }
     } catch (error) {
       console.error(error);
     }
@@ -42,10 +44,8 @@ const ProfileIcon = ({ profileImage, logout, user }: IProfileIcon) => {
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger>
-        <Image
-          src={profileImage || '/mirkec.png'}
-          height={30}
-          width={30}
+        <img
+          src={user?.profile_image || '/mirkec.png'}
           className="rounded-full object-cover h-[40px] w-[40px] cursor-pointer"
           alt="profile image"
         />
