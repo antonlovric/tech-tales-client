@@ -12,8 +12,13 @@ import React, { useState } from 'react';
 interface IProfileBioEditor {
   user: users;
   updateUserBio: (bio: string) => Promise<void>;
+  canEdit?: boolean;
 }
-const ProfileBioEditor = ({ user, updateUserBio }: IProfileBioEditor) => {
+const ProfileBioEditor = ({
+  user,
+  updateUserBio,
+  canEdit,
+}: IProfileBioEditor) => {
   const [isEditing, setIsEditing] = useState(false);
 
   const bioEditor = useEditor({
@@ -61,9 +66,13 @@ const ProfileBioEditor = ({ user, updateUserBio }: IProfileBioEditor) => {
           </div>
         ) : (
           <>
-            <button onClick={toggleEdit}>
-              <Pencil1Icon className="h-[24px] w-[24px]"></Pencil1Icon>
-            </button>
+            {canEdit ? (
+              <button onClick={toggleEdit}>
+                <Pencil1Icon className="h-[24px] w-[24px]"></Pencil1Icon>
+              </button>
+            ) : (
+              <></>
+            )}
           </>
         )}
       </div>

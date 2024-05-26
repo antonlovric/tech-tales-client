@@ -120,7 +120,11 @@ const UserProfile = async ({ params }: IProfilePage) => {
             )}
           </div>
           {!!profile ? (
-            <ProfileBioEditor user={profile} updateUserBio={saveProfileBio} />
+            <ProfileBioEditor
+              user={profile}
+              updateUserBio={saveProfileBio}
+              canEdit={canEdit}
+            />
           ) : (
             <></>
           )}
