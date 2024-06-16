@@ -47,20 +47,24 @@ const Post = async ({ params }: IPostPage) => {
           </div>
           <div className="flex items-center gap-2 ">
             <div className="rounded-full flex items-center gap-2 border border-light-gray">
-              <div className="flex items-center justify-center p-2 cursor-pointer gap-2">
+              <button className="flex items-center justify-center p-2 cursor-pointer gap-2">
                 <span className="material-symbols-outlined">thumb_up</span>
-              </div>
+              </button>
               <span>0</span>
-              <div className="flex items-center justify-center p-2 cursor-pointer gap-2">
+              <button className="flex items-center justify-center p-2 cursor-pointer gap-2">
                 <span className="material-symbols-outlined">thumb_down</span>
-              </div>
+              </button>
             </div>
-            <div className="rounded-full flex items-center gap-2 p-2 border border-light-gray">
+            <button className="rounded-full flex items-center gap-2 p-2 border border-light-gray">
               <span className="material-symbols-outlined">forum</span>
               <span>0</span>
-            </div>
-            <span className="material-symbols-outlined">share</span>
-            <span className="material-symbols-outlined">report</span>
+            </button>
+            <button>
+              <span className="material-symbols-outlined">share</span>
+            </button>
+            <button>
+              <span className="material-symbols-outlined">report</span>
+            </button>
           </div>
         </div>
         <img
