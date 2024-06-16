@@ -1,3 +1,4 @@
+import Tooltip from '@/app/components/UI/Tooltip';
 import { prisma } from '@/app/helpers/api';
 import { formatDate } from '@/app/helpers/global';
 import DOMPurify from 'isomorphic-dompurify';
@@ -47,24 +48,34 @@ const Post = async ({ params }: IPostPage) => {
           </div>
           <div className="flex items-center gap-2 ">
             <div className="rounded-full flex items-center gap-2 border border-light-gray">
-              <button className="flex items-center justify-center p-2 cursor-pointer gap-2">
-                <span className="material-symbols-outlined">thumb_up</span>
-              </button>
+              <Tooltip tooltipText="Like">
+                <button className="flex items-center justify-center p-2 cursor-pointer gap-2">
+                  <span className="material-symbols-outlined">thumb_up</span>
+                </button>
+              </Tooltip>
               <span>0</span>
-              <button className="flex items-center justify-center p-2 cursor-pointer gap-2">
-                <span className="material-symbols-outlined">thumb_down</span>
-              </button>
+              <Tooltip tooltipText="Dislike">
+                <button className="flex items-center justify-center p-2 cursor-pointer gap-2">
+                  <span className="material-symbols-outlined">thumb_down</span>
+                </button>
+              </Tooltip>
             </div>
-            <button className="rounded-full flex items-center gap-2 p-2 border border-light-gray">
-              <span className="material-symbols-outlined">forum</span>
-              <span>0</span>
-            </button>
-            <button>
-              <span className="material-symbols-outlined">share</span>
-            </button>
-            <button>
-              <span className="material-symbols-outlined">report</span>
-            </button>
+            <Tooltip tooltipText="Comment">
+              <button className="rounded-full flex items-center gap-2 p-2 border border-light-gray">
+                <span className="material-symbols-outlined">forum</span>
+                <span>0</span>
+              </button>
+            </Tooltip>
+            <Tooltip tooltipText="Share">
+              <button>
+                <span className="material-symbols-outlined">share</span>
+              </button>
+            </Tooltip>
+            <Tooltip tooltipText="Report">
+              <button>
+                <span className="material-symbols-outlined">report</span>
+              </button>
+            </Tooltip>
           </div>
         </div>
         <img
