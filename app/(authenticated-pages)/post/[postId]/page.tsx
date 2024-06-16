@@ -10,7 +10,10 @@ interface IPostPage {
 const Post = async ({ params }: IPostPage) => {
   const post = await prisma.posts.findFirst({
     where: { id: { equals: parseInt(params.postId) } },
-    include: { author: true },
+    include: {
+      author: true,
+      post_categories: { include: { categories: true } },
+    },
   });
 
   const sanitizedTitle = DOMPurify.sanitize(post?.title || '');
@@ -27,19 +30,59 @@ const Post = async ({ params }: IPostPage) => {
         dangerouslySetInnerHTML={{ __html: sanitizedSummary }}
         className="mb-5"
       ></div>
-      <section className="flex flex-col gap-5 mb-5 w-3/4 mx-auto">
-        <div>
+      <section className="flex flex-col mb-5 w-3/4 mx-auto">
+        <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div>{/* profile image */}</div>
-            <div className="flex flex-col justify-between">
+            <img
+              src={post?.author.profile_image || ''}
+              alt="Author profile image"
+              className="w-[60px] h-[60px] rounded-full"
+            />
+            <div className="flex flex-col justify-between h-full">
               <p>
                 Author: {post?.author.first_name} {post?.author.last_name}
               </p>
               <p>{formatDate(post?.created_at)}</p>
             </div>
           </div>
+          <div className="flex items-center gap-2 ">
+            <div className="rounded-full flex items-center gap-2 border border-light-gray">
+              <div className="flex items-center justify-center p-2 cursor-pointer gap-2">
+                <span className="material-symbols-outlined">thumb_up</span>
+              </div>
+              <span>0</span>
+              <div className="flex items-center justify-center p-2 cursor-pointer gap-2">
+                <span className="material-symbols-outlined">thumb_down</span>
+              </div>
+            </div>
+            <div className="rounded-full flex items-center gap-2 p-2 border border-light-gray">
+              <span className="material-symbols-outlined">forum</span>
+              <span>0</span>
+            </div>
+            <span className="material-symbols-outlined">share</span>
+            <span className="material-symbols-outlined">report</span>
+          </div>
         </div>
-        <img src={post?.cover_image || ''} alt="Post cover image" />
+        <img
+          src={post?.cover_image || ''}
+          alt="Post cover image"
+          className="my-2"
+        />
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <span className="material-symbols-outlined"></span>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          {post?.post_categories.map((category) => (
+            <button
+              key={category.categories_id}
+              className="px-3 py-2 text-sm cursor-pointer bg-blog-blue rounded-md whitespace-nowrap"
+            >
+              {category.categories.name}
+            </button>
+          ))}
+        </div>
       </section>
       <div dangerouslySetInnerHTML={{ __html: sanitizedBody }}></div>
     </main>
