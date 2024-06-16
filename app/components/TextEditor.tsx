@@ -7,6 +7,7 @@ import { ICreatePostRequest } from '../(authenticated-pages)/create-post/page';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import CharacterCount from '@tiptap/extension-character-count';
+import BodyEditor from './CreatePost/BodyEditor';
 
 interface ITextEditor {
   categories?: categories[];
@@ -37,7 +38,6 @@ const TextEditor = ({
   const bodyEditor = useEditor({
     extensions: [StarterKit],
     content: '<p>Hello World! 🌎️</p>',
-    injectCSS: false,
   });
 
   const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
@@ -73,10 +73,6 @@ const TextEditor = ({
 
   function getIsCategorySelected(targetIid: number) {
     return !!selectedCategories.find((id) => id === targetIid);
-  }
-
-  function toggleBold() {
-    bodyEditor?.chain().focus().toggleBold().run();
   }
 
   async function handleImageSelect(e: React.ChangeEvent<HTMLInputElement>) {
@@ -158,10 +154,7 @@ const TextEditor = ({
       )}
 
       <EditorContent editor={summaryEditor} className="text-4xl" />
-      <div className="flex items-center gap-2">
-        <button onClick={toggleBold}>Bold</button>
-      </div>
-      <EditorContent editor={bodyEditor} className="text-md leading-6" />
+      <BodyEditor editor={bodyEditor} />
       <div className="mt-5">
         <button onClick={handleSubmit} className="button-primary">
           Submit
