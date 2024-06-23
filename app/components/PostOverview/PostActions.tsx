@@ -21,6 +21,7 @@ interface IPost extends posts {
   post_votes: post_votes[] | null;
   isPostLiked?: boolean;
   isPostDisliked?: boolean;
+  commentCount?: number;
 }
 
 export type TVote = 'up' | 'down' | null;
@@ -40,7 +41,6 @@ const PostActions = (props: IPostActions) => {
 
   const { refresh } = useRouter();
 
-  const commentCount = 0;
   const [isPending, setTransition] = useTransition();
 
   async function handleLike() {
@@ -91,7 +91,7 @@ const PostActions = (props: IPostActions) => {
       <Tooltip tooltipText="Comment">
         <button className="rounded-full flex items-center gap-2 p-2 border border-light-gray">
           <span className="material-symbols-outlined">forum</span>
-          <span>{commentCount}</span>
+          <span>{props.post?.commentCount || 0}</span>
         </button>
       </Tooltip>
       <Tooltip tooltipText="Share">

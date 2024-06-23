@@ -33,6 +33,10 @@ const Post = async ({ params }: IPostPage) => {
     },
   });
 
+  const commentCount = await prisma.comments.count({
+    where: { posts_id: post?.id },
+  });
+
   const activeUser = getActiveUser();
 
   function getIsLiked() {
@@ -121,6 +125,7 @@ const Post = async ({ params }: IPostPage) => {
                 ...post,
                 isPostLiked: isLiked,
                 isPostDisliked: isDisliked,
+                commentCount,
               }}
               updateVote={handleVote}
             />
