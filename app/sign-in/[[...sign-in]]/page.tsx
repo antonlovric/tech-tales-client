@@ -1,5 +1,4 @@
 import React from 'react';
-import Image from 'next/image';
 import { exo } from '@/app/layout';
 import { Metadata } from 'next';
 import SignInForm, { IUserSignInForm } from '@/app/components/SignInForm';
@@ -65,12 +64,10 @@ const SignInPage = async () => {
             Create your own tale
           </h2>
         </div>
-        <Image
+        <img
           alt="People standing in a room with computers"
           src={'/auth-image.jpg'}
-          height={0}
-          width={0}
-          layout="fill"
+          className="h-full"
         />
       </div>
       <div className="flex items-center justify-center col-span-2">

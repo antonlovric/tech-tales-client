@@ -1,5 +1,6 @@
-import Tooltip from '@/app/components/UI/Tooltip';
+import PostActions, { TVote } from '@/app/components/PostOverview/PostActions';
 import { prisma } from '@/app/helpers/api';
+import { getActiveUser } from '@/app/helpers/auth';
 import { formatDate } from '@/app/helpers/global';
 import DOMPurify from 'isomorphic-dompurify';
 import React from 'react';
@@ -14,8 +15,56 @@ const Post = async ({ params }: IPostPage) => {
     include: {
       author: true,
       post_categories: { include: { categories: true } },
+      post_votes: true,
     },
   });
+
+  const activeUser = getActiveUser();
+
+  function getIsLiked() {
+    if (!activeUser) return false;
+    return !!post?.post_votes.find(
+      (vote) => vote.user_id === activeUser?.id && vote.type === 'up'
+    );
+  }
+
+  function getIsDisliked() {
+    if (!activeUser) return false;
+    return !!post?.post_votes.find(
+      (vote) => vote.user_id === activeUser?.id && vote.type === 'down'
+    );
+  }
+
+  const isLiked = getIsLiked();
+  const isDisliked = getIsDisliked();
+
+  async function handleVote(vote: TVote) {
+    'use server';
+    try {
+      if (activeUser && post) {
+        if (vote === null) {
+          const removedVote = await prisma.post_votes.delete({
+            where: {
+              user_id_post_id: { post_id: post.id, user_id: activeUser.id },
+            },
+          });
+          return removedVote;
+        }
+        const updatedVote = await prisma.post_votes.upsert({
+          where: {
+            user_id_post_id: { post_id: post.id, user_id: activeUser.id },
+          },
+          create: { type: vote, post_id: post.id, user_id: activeUser.id },
+          update: { type: vote, post_id: post.id, user_id: activeUser.id },
+        });
+        return updatedVote;
+      }
+      return null;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  }
 
   const sanitizedTitle = DOMPurify.sanitize(post?.title || '');
   const sanitizedSummary = DOMPurify.sanitize(post?.summary || '');
@@ -46,37 +95,18 @@ const Post = async ({ params }: IPostPage) => {
               <p>{formatDate(post?.created_at)}</p>
             </div>
           </div>
-          <div className="flex items-center gap-2 ">
-            <div className="rounded-full flex items-center gap-2 border border-light-gray">
-              <Tooltip tooltipText="Like">
-                <button className="flex items-center justify-center p-2 cursor-pointer gap-2">
-                  <span className="material-symbols-outlined">thumb_up</span>
-                </button>
-              </Tooltip>
-              <span>0</span>
-              <Tooltip tooltipText="Dislike">
-                <button className="flex items-center justify-center p-2 cursor-pointer gap-2">
-                  <span className="material-symbols-outlined">thumb_down</span>
-                </button>
-              </Tooltip>
-            </div>
-            <Tooltip tooltipText="Comment">
-              <button className="rounded-full flex items-center gap-2 p-2 border border-light-gray">
-                <span className="material-symbols-outlined">forum</span>
-                <span>0</span>
-              </button>
-            </Tooltip>
-            <Tooltip tooltipText="Share">
-              <button>
-                <span className="material-symbols-outlined">share</span>
-              </button>
-            </Tooltip>
-            <Tooltip tooltipText="Report">
-              <button>
-                <span className="material-symbols-outlined">report</span>
-              </button>
-            </Tooltip>
-          </div>
+          {post ? (
+            <PostActions
+              post={{
+                ...post,
+                isPostLiked: isLiked,
+                isPostDisliked: isDisliked,
+              }}
+              updateVote={handleVote}
+            />
+          ) : (
+            <></>
+          )}
         </div>
         <img
           src={post?.cover_image || ''}
