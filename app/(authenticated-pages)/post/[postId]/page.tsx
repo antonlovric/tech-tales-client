@@ -1,21 +1,35 @@
 import PostActions, { TVote } from '@/app/components/PostOverview/PostActions';
+import PostComments from '@/app/components/PostOverview/PostComments';
 import { prisma } from '@/app/helpers/api';
 import { getActiveUser } from '@/app/helpers/auth';
 import { formatDate } from '@/app/helpers/global';
 import DOMPurify from 'isomorphic-dompurify';
+import Link from 'next/link';
 import React from 'react';
 
 interface IPostPage {
-  params: { postId: string };
+  params: { postId: string; commentPage: string };
 }
 
 const Post = async ({ params }: IPostPage) => {
+  const COMMENT_PAGE_SIZE = 10;
+
   const post = await prisma.posts.findFirst({
     where: { id: { equals: parseInt(params.postId) } },
     include: {
       author: true,
       post_categories: { include: { categories: true } },
       post_votes: true,
+      comments: {
+        skip: parseInt(params.commentPage || '0'),
+        take: COMMENT_PAGE_SIZE,
+        orderBy: { created_at: 'asc' },
+        include: {
+          users: {
+            select: { first_name: true, last_name: true, profile_image: true },
+          },
+        },
+      },
     },
   });
 
@@ -36,26 +50,28 @@ const Post = async ({ params }: IPostPage) => {
   }
 
   const isLiked = getIsLiked();
+
   const isDisliked = getIsDisliked();
 
   async function handleVote(vote: TVote) {
     'use server';
+
     try {
       if (activeUser && post) {
         if (vote === null) {
           const removedVote = await prisma.post_votes.delete({
             where: {
-              user_id_post_id: { post_id: post.id, user_id: activeUser.id },
+              user_id_post_id: { post_id: post.id, user_id: activeUser?.id },
             },
           });
           return removedVote;
         }
         const updatedVote = await prisma.post_votes.upsert({
           where: {
-            user_id_post_id: { post_id: post.id, user_id: activeUser.id },
+            user_id_post_id: { post_id: post.id, user_id: activeUser?.id },
           },
-          create: { type: vote, post_id: post.id, user_id: activeUser.id },
-          update: { type: vote, post_id: post.id, user_id: activeUser.id },
+          create: { type: vote, post_id: post.id, user_id: activeUser?.id },
+          update: { type: vote, post_id: post.id, user_id: activeUser?.id },
         });
         return updatedVote;
       }
@@ -83,15 +99,19 @@ const Post = async ({ params }: IPostPage) => {
       <section className="flex flex-col mb-5 w-3/4 mx-auto">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <img
-              src={post?.author.profile_image || ''}
-              alt="Author profile image"
-              className="w-[60px] h-[60px] rounded-full"
-            />
+            <Link href={`/profile/${post?.author.id}`}>
+              <img
+                src={post?.author.profile_image || ''}
+                alt="Author profile image"
+                className="w-[60px] h-[60px] rounded-full"
+              />
+            </Link>
             <div className="flex flex-col justify-between h-full">
-              <p>
-                Author: {post?.author.first_name} {post?.author.last_name}
-              </p>
+              <Link href={`/profile/${post?.author.id}`}>
+                <p>
+                  Author: {post?.author.first_name} {post?.author.last_name}
+                </p>
+              </Link>
               <p>{formatDate(post?.created_at)}</p>
             </div>
           </div>
@@ -130,6 +150,13 @@ const Post = async ({ params }: IPostPage) => {
         </div>
       </section>
       <div dangerouslySetInnerHTML={{ __html: sanitizedBody }}></div>
+      <div className="mt-4">
+        {post ? (
+          <PostComments comments={post.comments} post_id={post.id} />
+        ) : (
+          <></>
+        )}
+      </div>
     </main>
   );
 };

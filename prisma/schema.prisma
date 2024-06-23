@@ -14,12 +14,13 @@ model categories {
 }
 
 model comments {
-  id       Int     @id @default(autoincrement())
-  comment  String? @db.VarChar(45)
-  posts_id Int?
-  users_id Int?
-  posts    posts?  @relation(fields: [posts_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_comments_posts1")
-  users    users?  @relation(fields: [users_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_comments_users1")
+  id         Int       @id @default(autoincrement())
+  comment    String?   @db.VarChar(45)
+  posts_id   Int?
+  users_id   Int?
+  created_at DateTime? @db.Timetz(6)
+  posts      posts?    @relation(fields: [posts_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_comments_posts1")
+  users      users?    @relation(fields: [users_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_comments_users1")
 }
 
 model post_categories {
