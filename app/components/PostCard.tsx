@@ -26,8 +26,14 @@ const PostCard = ({ post }: IPostCard) => {
     extensions: [StarterKit],
   });
 
+  const summaryEditor = useEditor({
+    editable: false,
+    content: post.summary,
+    extensions: [StarterKit],
+  });
+
   return (
-    <div className="border border-white rounded-md p-2 w-[350px] cursor-pointer h-full flex flex-col justify-between">
+    <div className="border border-white rounded-md p-2 cursor-pointer h-full flex flex-col justify-between">
       <div>
         <div className="w-full relative">
           <img
@@ -47,7 +53,7 @@ const PostCard = ({ post }: IPostCard) => {
           </div>
         </div>
         <EditorContent className="font-semibold" editor={titleEditor} />
-        <p className="">{post.summary}</p>
+        <EditorContent editor={summaryEditor} />
       </div>
       <div className="flex items-center justify-between">
         <p>

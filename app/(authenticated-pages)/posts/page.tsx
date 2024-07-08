@@ -68,7 +68,7 @@ const Posts = async ({ searchParams }: IPostsPage) => {
         <PostsSearch initialValue={parsedSearchQuery} />
       </div>
       <PostCategoriesFilter categories={categories} />
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-55">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-55 gap-y-8 gap-x-6">
         {posts.map((post) => (
           <Link href={`/post/${post.id}`} key={post.id}>
             <PostCard post={post} />
