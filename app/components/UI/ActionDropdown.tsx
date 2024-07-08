@@ -5,7 +5,7 @@ const ActionDropdown = (props: {
   isVisible?: boolean;
 }) => {
   return props.isVisible ? (
-    <div className="absolute top-full transition-transform transform-gpu translate-y-3 bg-dark-gray flex flex-col gap-2 p-2 rounded-md">
+    <div className="absolute top-full transition-transform transform-gpu translate-y-3 bg-dark-gray flex flex-col gap-2 p-2 rounded-md z-10">
       {props.children}
     </div>
   ) : (

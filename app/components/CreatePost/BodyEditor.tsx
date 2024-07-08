@@ -116,7 +116,10 @@ const BodyEditor = (props: IBodyEditor) => {
           />
         </div>
       </div>
-      <EditorContent editor={props.editor} className="text-md leading-6" />
+      <EditorContent
+        editor={props.editor}
+        className="text-md leading-6 border border-light-gray border-solid rounded-md p-2"
+      />
     </div>
   );
 };
