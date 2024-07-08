@@ -31,7 +31,7 @@ const ProfileIcon = ({ profileImage, logout, user }: IProfileIcon) => {
   }
 
   const handleSelect = (e: any) => {
-    switch (e.originalTarget.attributes.itemid.value) {
+    switch (e.target.attributes?.itemid.value) {
       case 'profile':
         return handleProfileClick();
       case 'add-post':
