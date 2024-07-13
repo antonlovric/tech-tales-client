@@ -1,5 +1,9 @@
 import PostActions, { TVote } from '@/app/components/PostOverview/PostActions';
 import PostComments from '@/app/components/PostOverview/PostComments';
+import {
+  incrementPostLikeCount,
+  incrementPostVisitCount,
+} from '@/app/helpers/analytics';
 import { prisma } from '@/app/helpers/api';
 import { getActiveUser } from '@/app/helpers/auth';
 import { formatDate } from '@/app/helpers/global';
@@ -32,6 +36,10 @@ const Post = async ({ params }: IPostPage) => {
       },
     },
   });
+
+  if (post?.id) {
+    incrementPostVisitCount(post.id);
+  }
 
   const commentCount = await prisma.comments.count({
     where: { posts_id: post?.id },
@@ -69,6 +77,9 @@ const Post = async ({ params }: IPostPage) => {
             },
           });
           return removedVote;
+        }
+        if (vote === 'up') {
+          incrementPostLikeCount(post.id);
         }
         const updatedVote = await prisma.post_votes.upsert({
           where: {
