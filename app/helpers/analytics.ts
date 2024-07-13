@@ -68,3 +68,12 @@ export async function updateRelevanceScores() {
     });
   }
 }
+
+export async function getRelevantPostId() {
+  const relevancePostIds = await redisClient.zRangeByScore(
+    'post_relevance_scores',
+    0,
+    1
+  );
+  return parseInt(relevancePostIds?.[0]);
+}

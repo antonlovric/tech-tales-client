@@ -1,25 +1,32 @@
 import { Metadata } from 'next';
 import FeaturedPost from '../components/FeaturedPost';
 import { inter } from './layout';
-import { updateRelevanceScores } from '../helpers/analytics';
-import { redisClient } from '../lib/redis';
+import { getRelevantPostId, updateRelevanceScores } from '../helpers/analytics';
+import { prisma } from '../helpers/api';
 
 export const metadata: Metadata = {
   title: 'Tech Tales | Home',
 };
 
 export default async function Home() {
-  await updateRelevanceScores();
-  const relevancePostIds = await redisClient.zRangeByScore(
-    'post_relevance_scores',
-    0,
-    1
-  );
+  updateRelevanceScores();
+  const relevantPostId = await getRelevantPostId();
 
-  if (relevancePostIds.length) {
-    console.log('RELEVANT POST ID');
-    console.log(relevancePostIds[0]);
-  }
+  const relevantPost = await prisma.posts.findFirst({
+    where: {
+      id: {
+        equals: relevantPostId,
+      },
+    },
+    include: {
+      author: true,
+      post_categories: {
+        include: {
+          categories: true,
+        },
+      },
+    },
+  });
 
   return (
     <div className={inter.className}>
@@ -27,9 +34,7 @@ export default async function Home() {
         Unlocking tech&apos;s untold stories{' '}
         <span className="text-blog-blue">one post at a time</span>
       </h1>
-      <main>
-        <FeaturedPost />
-      </main>
+      <main>{relevantPost ? <FeaturedPost post={relevantPost} /> : <></>}</main>
     </div>
   );
 }

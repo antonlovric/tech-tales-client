@@ -1,12 +1,26 @@
-import Image from 'next/image';
+import { Prisma } from '@prisma/client';
 import React from 'react';
+import { formatDate } from '../helpers/global';
+import DOMPurify from 'isomorphic-dompurify';
 
-const FeaturedPost = () => {
+interface IFeaturedPost {
+  post: Prisma.postsGetPayload<{
+    include: {
+      author: true;
+      post_categories: { include: { categories: true } };
+    };
+  }>;
+}
+
+const FeaturedPost = (props: IFeaturedPost) => {
+  const sanitizedTitle = DOMPurify.sanitize(props.post.title || '');
+  const sanitizedSummary = DOMPurify.sanitize(props.post.summary || '');
+
   return (
     <article className="grid grid-cols-2 gap-x-8 w-5/6 mx-auto mt-10">
-      <Image
+      <img
         alt="Blog image"
-        src={'/mock-blog-image.webp'}
+        src={props.post.cover_image || ''}
         height={300}
         width={650}
         className="border-2 border-blog-blue rounded-md"
@@ -14,36 +28,40 @@ const FeaturedPost = () => {
       <div className="flex flex-col justify-between">
         <div className="flex flex-col gap-3">
           <div className="flex items-center gap-3">
-            <span className="bg-blog-blue px-2 py-1 rounded-md">Science</span>
-            <span className="bg-blog-blue px-2 py-1 rounded-md">Computers</span>
-            <span className="bg-blog-blue px-2 py-1 rounded-md">
-              Programming
-            </span>
+            {props.post.post_categories.map((category) => (
+              <span
+                key={category.categories_id}
+                className="bg-blog-blue px-2 py-1 rounded-md"
+              >
+                {category.categories.name}
+              </span>
+            ))}
           </div>
           <div>
-            <h2 className="text-subheading font-semibold">
-              Demystifying Quantum Computing
-            </h2>
-            <p className="font-light text-xl text-justify">
-              Embark on an Extraordinary Journey into the Quantum Realm:
-              Unveiling the Boundless Potential and Conquering the Complex
-              Challenges of Quantum Computing - A Fascinating Voyage Shaping the
-              Future of Technology
-            </p>
+            <div
+              className="text-subheading font-semibold"
+              dangerouslySetInnerHTML={{ __html: sanitizedTitle }}
+            ></div>
+            <div
+              className="font-light text-xl text-justify"
+              dangerouslySetInnerHTML={{ __html: sanitizedSummary }}
+            ></div>
           </div>
         </div>
         <div className="flex font-extralight text-lg justify-between items-center">
           <div className="flex items-center justify-between gap-2">
-            <Image
-              src={'/mock-profile.jpeg'}
+            <img
+              src={props.post.author.profile_image || ''}
               width={50}
               height={50}
               alt="Author profile image"
               className="rounded-full w-[40px] h-[40px] object-cover"
             />
-            <p>by John Carter</p>
+            <p>
+              by {props.post.author.first_name} {props.post.author.last_name}
+            </p>
           </div>
-          <p>31.07.2023</p>
+          <p> {formatDate(props.post.created_at)}</p>
         </div>
       </div>
     </article>
