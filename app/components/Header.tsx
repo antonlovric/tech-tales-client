@@ -33,9 +33,6 @@ const Header = async () => {
             <li>
               <Link href={'/posts'}>Posts</Link>
             </li>
-            <li>
-              <Link href={'#'}>Contact</Link>
-            </li>
           </ul>
         </span>
       </nav>
