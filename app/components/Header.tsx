@@ -25,7 +25,7 @@ const Header = async () => {
         <span className="ml-4">
           <ul className="flex items-center gap-2">
             <li>
-              <Link href={'#'}>Home</Link>
+              <Link href={'/'}>Home</Link>
             </li>
             <li>
               <Link href={'#'}>About</Link>
