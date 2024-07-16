@@ -24,7 +24,7 @@ const ProfileIcon = ({ profileImage, logout, user }: IProfileIcon) => {
     }
   };
   const handleAddPost = () => {
-    router.replace('create-post');
+    router.replace('/create-post');
   };
   function handleLogout() {
     logout();
