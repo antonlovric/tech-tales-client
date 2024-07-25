@@ -65,8 +65,9 @@ export default async function Home() {
           </div>
           <div className="flex items-start gap-8">
             {category.post_categories.map((post) => (
-              <div
-                className="relative flex flex-col gap-2 items-start justify-center w-[400px]"
+              <Link
+                href={`post/${post.posts_id}`}
+                className="relative flex flex-col gap-2 items-start justify-center w-[400px] cursor-pointer"
                 key={`${post.categories_id}-${post.posts_id}`}
               >
                 <img
@@ -84,7 +85,7 @@ export default async function Home() {
                     __html: getSanitizedHtml(post.posts.summary),
                   }}
                 ></span>
-              </div>
+              </Link>
             ))}
           </div>
         </section>
