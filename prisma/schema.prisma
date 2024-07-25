@@ -45,7 +45,7 @@ model post_tags {
 model posts {
   id              Int               @id @default(autoincrement())
   title           String?           @db.VarChar(100)
-  summary         String?           @db.VarChar(300)
+  summary         String?
   users_id        Int
   html_content    String?
   json_content    Json?             @db.Json
