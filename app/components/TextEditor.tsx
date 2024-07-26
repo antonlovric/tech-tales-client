@@ -41,14 +41,19 @@ const TextEditor = ({ categories, createPost }: ITextEditor) => {
   const handleSubmit = async () => {
     const imagePath = file ? await uploadImage(file) : '';
 
-    await createPost({
-      categoryIds: selectedCategories,
-      html_content: bodyEditor?.getHTML() || '',
-      json_content: bodyEditor?.getJSON() || { type: '', content: [] },
-      summary: summaryEditor?.getHTML() || '',
-      title: titleEditor?.getHTML() || '',
-      coverImagePath: imagePath,
-    });
+    try {
+      await createPost({
+        categoryIds: selectedCategories,
+        html_content: bodyEditor?.getHTML() || '',
+        json_content: bodyEditor?.getJSON() || { type: '', content: [] },
+        summary: summaryEditor?.getHTML() || '',
+        title: titleEditor?.getHTML() || '',
+        coverImagePath: imagePath,
+      });
+    } catch (error) {
+      console.error(error);
+    }
+
     router.replace('/');
   };
 

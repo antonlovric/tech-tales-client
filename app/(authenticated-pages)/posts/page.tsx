@@ -1,6 +1,8 @@
 import PostCard from '@/app/components/PostCard';
 import PostCategoriesFilter from '@/app/components/PostCategoriesFilter';
 import PostsSearch from '@/app/components/PostsSearch';
+import PageSizeSelector from '@/app/components/UI/PageSizeSelector';
+import Pagination from '@/app/components/UI/Pagination';
 import { prisma } from '@/app/helpers/api';
 import Link from 'next/link';
 import React from 'react';
@@ -8,6 +10,8 @@ import React from 'react';
 export interface ISearchParams {
   categories?: string;
   search?: string;
+  pageSize?: string;
+  activePage?: string;
 }
 
 interface IPostsPage {
@@ -19,6 +23,9 @@ const Posts = async ({ searchParams }: IPostsPage) => {
   const parsedCategoriesQuery: number[] = JSON.parse(
     decodeURIComponent(searchParams?.categories || '[]')
   );
+  const activePageNumber: number = parseInt(searchParams?.activePage || '1');
+
+  const pageSize: number = parseInt(searchParams?.pageSize || '6');
   const whereClause: any = {};
   if (parsedSearchQuery) {
     whereClause['OR'] = [
@@ -44,6 +51,17 @@ const Posts = async ({ searchParams }: IPostsPage) => {
     });
   }
 
+  const postCount = await prisma.posts.count({
+    where: whereClause,
+  });
+
+  function getSkipValue() {
+    if (activePageNumber > Math.ceil(postCount / pageSize)) {
+      return 0;
+    }
+    return pageSize * (activePageNumber - 1);
+  }
+
   const posts = await prisma.posts.findMany({
     include: {
       author: true,
@@ -54,9 +72,13 @@ const Posts = async ({ searchParams }: IPostsPage) => {
       },
     },
     where: whereClause,
+    take: pageSize,
+    skip: getSkipValue(),
   });
 
   const categories = await prisma.categories.findMany();
+
+  const numberOfPages = Math.ceil(postCount / pageSize);
 
   return (
     <div className="w-11/12 mx-auto">
@@ -75,6 +97,13 @@ const Posts = async ({ searchParams }: IPostsPage) => {
           </Link>
         ))}
       </div>
+      <section className="flex items-start justify-between">
+        <Pagination
+          selectedPage={activePageNumber}
+          numberOfPages={numberOfPages}
+        />
+        <PageSizeSelector />
+      </section>
     </div>
   );
 };
