@@ -23,6 +23,7 @@ const PageSizeSelector = (props: IPageSizeSelector) => {
     } else {
       const params = new URLSearchParams(window.location.search);
       params.set('pageSize', selectedPage.toString());
+      params.delete('activePage');
       setTransition(() => {
         replace(`${pathname}?${params.toString()}`);
       });
@@ -31,7 +32,7 @@ const PageSizeSelector = (props: IPageSizeSelector) => {
 
   return (
     <select
-      className="bg-dark-gray border-light-gray px-2 py-2 rounded-md"
+      className="bg-dark-gray border-light-gray border px-2 py-2 rounded-md"
       onChange={selectPageSize}
       defaultValue={props.activePageSize || pageSizes[0]}
     >
