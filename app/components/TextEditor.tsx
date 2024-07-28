@@ -1,18 +1,18 @@
 'use client';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import type { categories } from '@prisma/client';
 import { ICreatePostRequest } from '../(authenticated-pages)/create-post/page';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import CharacterCount from '@tiptap/extension-character-count';
 import BodyEditor from './CreatePost/BodyEditor';
+import { Image as CustomTiptapImage } from '@/app/helpers/tiptap';
 
 interface ITextEditor {
   categories?: categories[];
   createPost: (args: ICreatePostRequest) => Promise<void>;
-  uploadCoverImage: (image: string) => Promise<string | undefined>;
 }
 
 const TextEditor = ({ categories, createPost }: ITextEditor) => {
@@ -32,20 +32,31 @@ const TextEditor = ({ categories, createPost }: ITextEditor) => {
   });
 
   const bodyEditor = useEditor({
-    extensions: [StarterKit],
+    extensions: [StarterKit, CustomTiptapImage],
     content: '<p>Hello World! 🌎️</p>',
   });
 
   const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
+  const uploadedImageKeys = useRef<string[]>([]);
+  const shouldDeleteImages = useRef(true);
+
+  useEffect(() => {
+    return () => {
+      if (shouldDeleteImages.current) {
+        deleteImages(uploadedImageKeys.current);
+      }
+    };
+  }, []);
 
   const handleSubmit = async () => {
     const imagePath = file ? await uploadImage(file) : '';
 
     try {
+      shouldDeleteImages.current = false;
+
       await createPost({
         categoryIds: selectedCategories,
         html_content: bodyEditor?.getHTML() || '',
-        json_content: bodyEditor?.getJSON() || { type: '', content: [] },
         summary: summaryEditor?.getHTML() || '',
         title: titleEditor?.getHTML() || '',
         coverImagePath: imagePath,
@@ -74,6 +85,20 @@ const TextEditor = ({ categories, createPost }: ITextEditor) => {
 
   function getIsCategorySelected(targetIid: number) {
     return !!selectedCategories.find((id) => id === targetIid);
+  }
+
+  async function deleteImages(imageIds: string[]) {
+    try {
+      await fetch(process.env.NEXT_PUBLIC_BASE_URL + '/api/image', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ imageIds }),
+      });
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   async function uploadImage(image: File) {
@@ -184,7 +209,12 @@ const TextEditor = ({ categories, createPost }: ITextEditor) => {
         </div>
       )}
       <EditorContent editor={summaryEditor} className="text-4xl" />
-      <BodyEditor editor={bodyEditor} />
+      <BodyEditor
+        editor={bodyEditor}
+        uploadImage={uploadImage}
+        deleteImages={deleteImages}
+        updateUploadedImagesList={(key) => uploadedImageKeys.current.push(key)}
+      />
       <div className="mt-5">
         <button onClick={handleSubmit} className="button-primary">
           Submit

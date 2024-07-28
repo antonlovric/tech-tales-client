@@ -7,6 +7,9 @@ import ActionDropdown from '../UI/ActionDropdown';
 
 interface IBodyEditor {
   editor: Editor | null;
+  deleteImages?: (imageIds: string[]) => Promise<void>;
+  uploadImage?: (image: File) => Promise<string>;
+  updateUploadedImagesList?: (imageKey: string) => void;
 }
 
 const BodyEditor = (props: IBodyEditor) => {
@@ -54,6 +57,28 @@ const BodyEditor = (props: IBodyEditor) => {
 
   function toggleCodeBlock() {
     props.editor?.chain().focus().toggleCodeBlock().run();
+  }
+
+  async function insertImage(e: React.ChangeEvent<HTMLInputElement>) {
+    const image = e.target.files?.[0];
+    if (image && props.uploadImage) {
+      const url = await props.uploadImage(image);
+      if (url) {
+        props.editor
+          ?.chain()
+          .insertContentAt(props.editor.state.selection.anchor, {
+            type: 'image',
+            attrs: { src: url, alt: 'Article image', title: 'Article image' },
+          })
+          .focus()
+          .run();
+        const splitImageUrl = url.split('/');
+        if (props.updateUploadedImagesList)
+          props.updateUploadedImagesList(
+            splitImageUrl[splitImageUrl.length - 1]
+          );
+      }
+    }
   }
 
   return (
@@ -114,11 +139,22 @@ const BodyEditor = (props: IBodyEditor) => {
             isActive={props.editor?.isActive('codeBlock')}
             iconName="code"
           />
+          <label htmlFor="image-input" className="cursor-pointer">
+            <span className="material-symbols-outlined">image</span>
+          </label>
+          <input
+            className="hidden"
+            type="file"
+            accept="image/*"
+            name="image-input"
+            id="image-input"
+            onChange={insertImage}
+          />
         </div>
       </div>
       <EditorContent
         editor={props.editor}
-        className="text-md leading-6 border border-light-gray border-solid rounded-md p-2"
+        className="text-md leading-6 border border-light-gray border-solid rounded-md p-2 [&_img]:text-center"
       />
     </div>
   );

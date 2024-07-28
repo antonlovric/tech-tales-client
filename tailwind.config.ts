@@ -24,6 +24,10 @@ const config: Config = {
         heading: '2.5rem',
         subheading: '2rem',
       },
+      gridTemplateColumns: {
+        'auto-fill-350': 'repeat(auto-fill, minmax(350px, 1fr))',
+        'auto-fit-350': 'repeat(auto-fit, minmax(350px, 1fr))',
+      },
     },
   },
   plugins: [],
