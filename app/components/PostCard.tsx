@@ -33,7 +33,7 @@ const PostCard = ({ post }: IPostCard) => {
   });
 
   return (
-    <div className="border border-white rounded-md p-2 cursor-pointer h-full flex flex-col justify-between">
+    <div className=" border-white rounded-md p-2 cursor-pointer h-full flex flex-col justify-between">
       <div>
         <div className="w-full relative">
           <img

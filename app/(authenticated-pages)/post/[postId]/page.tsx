@@ -109,7 +109,7 @@ const Post = async ({ params }: IPostPage) => {
       ></div>
       <div
         dangerouslySetInnerHTML={{ __html: sanitizedSummary }}
-        className="mb-5"
+        className="text-xl mb-5"
       ></div>
       <section className="flex flex-col mb-5 w-3/4 mx-auto">
         <div className="flex items-center justify-between">
@@ -118,7 +118,7 @@ const Post = async ({ params }: IPostPage) => {
               <img
                 src={post?.author.profile_image || ''}
                 alt="Author profile image"
-                className="w-[60px] h-[60px] rounded-full"
+                className="w-[60px] h-[60px] object-cover rounded-full"
               />
             </Link>
             <div className="flex flex-col justify-between h-full">
