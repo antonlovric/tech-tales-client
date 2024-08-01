@@ -5,6 +5,7 @@ import { exo } from '../layout';
 import { getActiveUser, getIsLoggedIn, logout } from '../helpers/auth';
 import ProfileIcon from './ProfileIcon';
 import { prisma } from '../helpers/api';
+import HeaderSearch from './HeaderSearch';
 
 const Header = async () => {
   const isLoggedIn = getIsLoggedIn();
@@ -33,27 +34,13 @@ const Header = async () => {
               <Link href={'/'}>Home</Link>
             </li>
             <li>
-              <Link href={'#'}>About</Link>
-            </li>
-            <li>
               <Link href={'/posts'}>Posts</Link>
             </li>
           </ul>
         </span>
       </nav>
       <div className="flex items-center gap-5">
-        <form
-          action=""
-          className="flex items-center gap-2 bg-dark-gray p-2 rounded-md border-2 border-transparent focus-within:border-light-gray"
-        >
-          <input
-            type="text"
-            name="search"
-            placeholder="Search"
-            className="bg-transparent focus:outline-none px-2"
-          />
-          <Image alt="search icon" src={'/search.svg'} width={27} height={27} />
-        </form>
+        <HeaderSearch />
         {isLoggedIn ? (
           <ProfileIcon logout={logout} user={userProfile} />
         ) : (
