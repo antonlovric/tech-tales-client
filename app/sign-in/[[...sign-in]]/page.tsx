@@ -70,7 +70,8 @@ const SignInPage = async () => {
           className="h-full"
         />
       </div>
-      <div className="flex items-center justify-center col-span-2">
+      <div className="flex flex-col w-1/3 gap-4 items-center justify-center col-span-2 mx-auto my-auto bg-dark-gray h-max p-6 rounded-lg">
+        <img alt="" src={'/logo-no-background.svg'} className="w-full mb-4" />
         <SignInForm handleSignIn={handleSignIn} />
       </div>
     </main>

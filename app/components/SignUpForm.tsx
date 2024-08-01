@@ -40,7 +40,7 @@ const SignUpForm = ({ handleSignUp }: ISignUpForm) => {
   }
 
   return (
-    <form action={submitUser} className="flex flex-col gap-2">
+    <form action={submitUser} className="flex flex-col gap-4">
       <div className="flex flex-col gap-1 align-center">
         <label htmlFor="firstName">First name</label>
         <input
@@ -48,7 +48,7 @@ const SignUpForm = ({ handleSignUp }: ISignUpForm) => {
           type="text"
           id="firstName"
           value={formValues.firstName}
-          className="text-black rounded-md py-1 px-2"
+          className="text-white bg-dark-gray rounded-md py-2 px-4 w-full border border-light-gray"
         />
       </div>
       <div className="flex flex-col gap-1 align-center">
@@ -58,7 +58,7 @@ const SignUpForm = ({ handleSignUp }: ISignUpForm) => {
           type="text"
           id="lastName"
           value={formValues.lastName}
-          className="text-black rounded-md py-1 px-2"
+          className="text-white bg-dark-gray rounded-md py-2 px-4 w-full border border-light-gray"
         />
       </div>
       <div className="flex flex-col gap-1 align-center">
@@ -68,7 +68,7 @@ const SignUpForm = ({ handleSignUp }: ISignUpForm) => {
           type="email"
           id="email"
           value={formValues.email}
-          className="text-black rounded-md py-1 px-2"
+          className="text-white bg-dark-gray rounded-md py-2 px-4 w-full border border-light-gray"
         />
       </div>
       <div className="flex flex-col gap-1 align-center">
@@ -78,10 +78,12 @@ const SignUpForm = ({ handleSignUp }: ISignUpForm) => {
           type="password"
           id="password"
           value={formValues.password}
-          className="text-black rounded-md py-1 px-2"
+          className="text-white bg-dark-gray rounded-md py-2 px-4 w-full border border-light-gray"
         />
       </div>
-      <button type="submit">Sign Up</button>
+      <button type="submit" className="button-primary mt-2">
+        Sign Up
+      </button>
     </form>
   );
 };

@@ -18,7 +18,12 @@ const Header = async () => {
       <nav className="flex items-center">
         <div className="flex items-center gap-2">
           <Link href={'/'}>
-            <Image src={'/logo.svg'} width={50} height={50} alt="Blog Logo" />
+            <Image
+              src={'/tech-tales-favicon-color.png'}
+              width={50}
+              height={50}
+              alt="Blog Logo"
+            />
           </Link>
           <span className="font-semibold text-xl">Tech Tales</span>
         </div>

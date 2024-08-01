@@ -33,10 +33,7 @@ const SignInForm = ({ handleSignIn, errorMessage }: ISignInForm) => {
   }
 
   return (
-    <form action={submitUser} className="flex flex-col gap-2">
-      <div className="flex flex-col gap-1 align-center">
-        <label htmlFor="firstName">First name</label>
-      </div>
+    <form action={submitUser} className="flex flex-col gap-4">
       <div className="flex flex-col gap-1 align-center">
         <label htmlFor="email">Email</label>
         <input
@@ -44,7 +41,7 @@ const SignInForm = ({ handleSignIn, errorMessage }: ISignInForm) => {
           type="email"
           id="email"
           value={formValues.email}
-          className="text-black rounded-md py-1 px-2"
+          className="text-white bg-dark-gray rounded-md py-2 px-4 w-full border border-light-gray"
         />
       </div>
       <div className="flex flex-col gap-1 align-center">
@@ -54,11 +51,13 @@ const SignInForm = ({ handleSignIn, errorMessage }: ISignInForm) => {
           type="password"
           id="password"
           value={formValues.password}
-          className="text-black rounded-md py-1 px-2"
+          className="text-white bg-dark-gray rounded-md py-2 px-4 w-full border border-light-gray"
         />
       </div>
       {errorMessage ? 'Invalid credentials' : ''}
-      <button type="submit">Sign In</button>
+      <button type="submit" className="button-primary mt-2">
+        Sign In
+      </button>
     </form>
   );
 };
