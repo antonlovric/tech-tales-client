@@ -3,8 +3,12 @@
 import { categories, posts, users } from '@prisma/client';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
-import React from 'react';
+import React, { useTransition } from 'react';
 import { formatDate } from '../helpers/global';
+import Tooltip from './UI/Tooltip';
+import { deletePost } from '../actions/posts';
+import { useRouter } from 'next/navigation';
+import LoadingWrapper from './UI/LoadingWrapper';
 
 interface IPostCategories {
   categories: categories;
@@ -17,9 +21,12 @@ interface IExtendedPost extends posts {
 
 interface IPostCard {
   post: IExtendedPost;
+  isEditable?: boolean;
 }
 
-const PostCard = ({ post }: IPostCard) => {
+const PostCard = ({ post, isEditable }: IPostCard) => {
+  const [isDeletePending, setDeleteTransition] = useTransition();
+  const { refresh } = useRouter();
   const titleEditor = useEditor({
     editable: false,
     content: post.title,
@@ -32,8 +39,53 @@ const PostCard = ({ post }: IPostCard) => {
     extensions: [StarterKit],
   });
 
+  async function handleDeletePost(
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) {
+    e.preventDefault();
+    e.stopPropagation();
+    setDeleteTransition(async () => {
+      try {
+        await deletePost(post.id);
+        refresh();
+      } catch (error) {
+        console.error(error);
+      }
+    });
+  }
+
+  function editPost() {}
+
   return (
-    <div className=" border-white rounded-md p-2 cursor-pointer h-full flex flex-col justify-between">
+    <div className="bg-dark-gray border-light-gray border rounded-md p-2 cursor-pointer h-full flex flex-col justify-between relative">
+      {isEditable ? (
+        <div className="flex items-center absolute top-4 right-4 gap-2 z-10">
+          <Tooltip tooltipText="Edit">
+            <button
+              onClick={editPost}
+              className="bg-dark-gray border-light-gray border rounded-full flex items-center justify-center text-sm p-1"
+            >
+              <span className="material-symbols-outlined !text-xs !leading-[1] w-3 h-3">
+                edit
+              </span>
+            </button>
+          </Tooltip>
+          <Tooltip tooltipText="Delete">
+            <LoadingWrapper isLoading={isDeletePending}>
+              <button
+                onClick={handleDeletePost}
+                className="bg-dark-gray border-light-gray border rounded-full flex items-center justify-center text-sm p-1"
+              >
+                <span className="material-symbols-outlined !text-xs !leading-[1] w-3 h-3">
+                  close
+                </span>
+              </button>
+            </LoadingWrapper>
+          </Tooltip>
+        </div>
+      ) : (
+        <></>
+      )}
       <div>
         <div className="w-full relative">
           <img

@@ -18,3 +18,14 @@ export async function addComment(args: IAddComment) {
     },
   });
 }
+
+export async function deletePost(postId: number) {
+  'use server';
+  const activeUser = getActiveUser();
+  if (!activeUser) throw new Error('User not logged in');
+  await prisma.posts.delete({
+    where: {
+      id: postId,
+    },
+  });
+}

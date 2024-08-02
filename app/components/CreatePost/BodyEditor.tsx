@@ -4,17 +4,18 @@ import { Editor, EditorContent } from '@tiptap/react';
 import React, { useState } from 'react';
 import TextEditorButton from './TextEditorButton';
 import ActionDropdown from '../UI/ActionDropdown';
+import { uploadImage } from '@/app/helpers/s3';
 
 interface IBodyEditor {
   editor: Editor | null;
   deleteImages?: (imageIds: string[]) => Promise<void>;
-  uploadImage?: (image: File) => Promise<string>;
   updateUploadedImagesList?: (imageKey: string) => void;
 }
 
 const BodyEditor = (props: IBodyEditor) => {
   const [isFontDropdownVisible, setIsFontDropdownVisible] = useState(false);
   const [activeFontType, setActiveFontType] = useState('Paragraph');
+
   function toggleBold() {
     props.editor?.chain().focus().toggleBold().run();
   }
@@ -61,8 +62,8 @@ const BodyEditor = (props: IBodyEditor) => {
 
   async function insertImage(e: React.ChangeEvent<HTMLInputElement>) {
     const image = e.target.files?.[0];
-    if (image && props.uploadImage) {
-      const url = await props.uploadImage(image);
+    if (image) {
+      const url = await uploadImage(image);
       if (url) {
         props.editor
           ?.chain()

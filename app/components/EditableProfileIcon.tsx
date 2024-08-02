@@ -1,6 +1,6 @@
 'use client';
-import { CheckCircledIcon, CrossCircledIcon } from '@radix-ui/react-icons';
 import React, { useState } from 'react';
+import { uploadImage } from '../helpers/s3';
 
 interface IEditableProfileIcon {
   initialProfileIconLink: string;
@@ -20,23 +20,22 @@ const EditableProfileIcon = ({
   async function handleImageSelect(e: React.ChangeEvent<HTMLInputElement>) {
     const image = e.target.files?.[0];
     if (image) {
+      const imageUrl = await uploadImage(image);
+      if (imageUrl && typeof imageUrl === 'string') {
+      }
       const reader = new FileReader();
       reader.onloadend = () => {
         if (reader.result && typeof reader.result === 'string') {
-          setProfileIconLink(reader.result);
+          setProfileIconLink(imageUrl);
+          saveChange(imageUrl);
         }
       };
       reader.readAsDataURL(image);
     }
   }
 
-  function discardChange() {
-    setProfileIconLink(initialProfileIconLink);
-  }
-
-  async function saveChange() {
-    await saveProfileImage(profileIconLink);
-    window.location.reload();
+  async function saveChange(imageUrl: string) {
+    await saveProfileImage(imageUrl);
   }
 
   return (
@@ -61,18 +60,6 @@ const EditableProfileIcon = ({
           src={profileIconLink}
           alt="user profile image"
         />
-        {canEdit ? (
-          <>
-            <button className="absolute top-0 left-0" onClick={saveChange}>
-              <CheckCircledIcon className="w-[24px] h-[24px] text-green-400"></CheckCircledIcon>
-            </button>
-            <button className="absolute top-0 right-0" onClick={discardChange}>
-              <CrossCircledIcon className="w-[24px] h-[24px] text-red-400"></CrossCircledIcon>
-            </button>
-          </>
-        ) : (
-          <></>
-        )}
       </label>
     </>
   );

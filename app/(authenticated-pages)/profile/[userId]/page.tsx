@@ -46,11 +46,10 @@ const UserProfile = async ({ params }: IProfilePage) => {
     return databasePath;
   }
 
-  async function saveProfileImage(profileImage: string) {
+  async function saveProfileImage(profileImageUrl: string) {
     'use server';
     if (profile) {
       try {
-        const profileImageUrl = await uploadProfileImage(profileImage);
         if (profileImageUrl) {
           const updatedProfile = await prisma.users.update({
             where: { id: profile.id },
@@ -69,7 +68,9 @@ const UserProfile = async ({ params }: IProfilePage) => {
     if (profile) {
       try {
         await prisma.users.update({ where: { id: profile.id }, data: { bio } });
-      } catch (error) {}
+      } catch (error) {
+        console.error(error);
+      }
     }
   }
 
@@ -131,10 +132,10 @@ const UserProfile = async ({ params }: IProfilePage) => {
         </section>
         <section>
           <p className="mb-3">Latest posts</p>
-          <article className="grid grid-cols-3 gap-2">
+          <article className="grid grid-cols-auto-fill-350 autofill:250 gap-y-8 gap-x-6">
             {profile?.posts.map((post) => (
               <Link key={post.id} href={`/post/${post.id}`}>
-                <PostCard post={post} />
+                <PostCard isEditable={canEdit} post={post} />
               </Link>
             ))}
           </article>
