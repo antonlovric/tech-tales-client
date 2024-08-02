@@ -29,8 +29,6 @@ const ProfileDetails = (props: IProfileDetails) => {
   const [editedPhoneNumber, setEditedPhoneNumber] = useState(
     props.profile.phone_number || ''
   );
-  const [isEditingEmail, setIsEditingEmail] = useState(false);
-  const [editedEmail, setEditedEmail] = useState(props.profile.email || '');
   const [_, setTransition] = useTransition();
   const { refresh } = useRouter();
 
@@ -47,11 +45,6 @@ const ProfileDetails = (props: IProfileDetails) => {
           value.trim() !== props.profile.phone_number?.trim()
         ) {
           await editUser(props.profile.id, { phone_number: value });
-        } else if (
-          field === 'email' &&
-          value.trim() !== props.profile.email?.trim()
-        ) {
-          await editUser(props.profile.id, { email: value });
         }
         refresh();
       } catch (error) {
@@ -116,21 +109,7 @@ const ProfileDetails = (props: IProfileDetails) => {
         <>
           <div className="flex items-center gap-2">
             <EnvelopeClosedIcon />
-            {isEditingEmail ? (
-              <input
-                onBlur={(e) => {
-                  setIsEditingEmail(false);
-                  handleBlur('email', e.target.value);
-                }}
-                className="bg-dark-gray px-2 py-2 rounded-md h-4"
-                value={editedEmail}
-                onChange={(e) => setEditedEmail(e.target.value)}
-              />
-            ) : (
-              <p onClick={() => setIsEditingEmail(true)}>
-                {props.profile.email}
-              </p>
-            )}
+            <p>{props.profile.email}</p>
           </div>
         </>
       ) : (
