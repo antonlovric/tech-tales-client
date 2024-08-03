@@ -2,10 +2,22 @@
 
 import React from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 const HeaderSearch = () => {
+  const { push } = useRouter();
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const searchInput = e.currentTarget.elements.namedItem('search');
+    if (searchInput instanceof HTMLInputElement) {
+      push(`/posts?search=${encodeURIComponent(searchInput.value?.trim())}`);
+    }
+  }
   return (
-    <form className="flex items-center gap-2 bg-dark-gray p-2 rounded-md border-2 border-transparent focus-within:border-light-gray">
+    <form
+      onSubmit={handleSubmit}
+      className="flex items-center gap-2 bg-dark-gray p-2 rounded-md border-2 border-transparent focus-within:border-light-gray"
+    >
       <input
         type="text"
         name="search"

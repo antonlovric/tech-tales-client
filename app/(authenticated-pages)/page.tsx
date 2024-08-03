@@ -66,11 +66,11 @@ export default async function Home() {
               <button className="button-primary">More</button>
             </Link>
           </div>
-          <div className="flex items-start gap-8">
+          <div className="flex items-start gap-8 w-full overflow-x-scroll">
             {category.post_categories.map((post) => (
               <Link
                 href={`post/${post.posts_id}`}
-                className="relative flex flex-col gap-2 items-start justify-center w-[400px] cursor-pointer"
+                className="bg-dark-gray rounded-md p-2 cursor-pointer relative max-w-[350px]"
                 key={`${post.categories_id}-${post.posts_id}`}
               >
                 <img

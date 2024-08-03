@@ -57,7 +57,7 @@ const PostCard = ({ post, isEditable }: IPostCard) => {
   function editPost() {}
 
   return (
-    <div className="bg-dark-gray border-light-gray border rounded-md p-2 cursor-pointer h-full flex flex-col justify-between relative">
+    <div className="bg-dark-gray  rounded-md p-2 cursor-pointer h-full flex flex-col justify-between relative">
       {isEditable ? (
         <div className="flex items-center absolute top-4 right-4 gap-2 z-10">
           <Tooltip tooltipText="Edit">
