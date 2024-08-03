@@ -17,17 +17,15 @@ const Header = async () => {
       className={`${exo.className} bg-dark text-white flex items-center justify-between`}
     >
       <nav className="flex items-center">
-        <div className="flex items-center gap-2">
-          <Link href={'/'}>
-            <Image
-              src={'/tech-tales-favicon-color.png'}
-              width={50}
-              height={50}
-              alt="Blog Logo"
-            />
-          </Link>
+        <Link href={'/'} className="flex items-center gap-2">
+          <Image
+            src={'/tech-tales-favicon-color.png'}
+            width={50}
+            height={50}
+            alt="Blog Logo"
+          />
           <span className="font-semibold text-xl">Tech Tales</span>
-        </div>
+        </Link>
         <span className="ml-4">
           <ul className="flex items-center gap-2">
             <li>
