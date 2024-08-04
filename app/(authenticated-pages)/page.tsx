@@ -36,7 +36,15 @@ export default async function Home() {
         Unlocking tech&apos;s untold stories
         <span className="text-blog-blue"> one post at a time</span>
       </h1>
-      <main>{relevantPost ? <FeaturedPost post={relevantPost} /> : <></>}</main>
+      <main>
+        {relevantPost ? (
+          <Link href={`/post/${relevantPost.id}`}>
+            <FeaturedPost post={relevantPost} />
+          </Link>
+        ) : (
+          <></>
+        )}
+      </main>
       {filteredPostCategories.map((category) => (
         <section
           className="flex flex-col gap-2 mt-6 [&:not(:last-child)]:border-b-4 border-blog-blue pb-4"
