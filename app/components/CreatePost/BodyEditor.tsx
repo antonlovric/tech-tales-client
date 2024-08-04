@@ -8,7 +8,6 @@ import { uploadImage } from '@/app/helpers/s3';
 
 interface IBodyEditor {
   editor: Editor | null;
-  deleteImages?: (imageIds: string[]) => Promise<void>;
   updateUploadedImagesList?: (imageKey: string) => void;
 }
 

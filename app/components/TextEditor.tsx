@@ -2,42 +2,44 @@
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import React, { useEffect, useRef, useState } from 'react';
-import type { categories } from '@prisma/client';
-import { ICreatePostRequest } from '../(authenticated-pages)/create-post/page';
-import Image from 'next/image';
+import type { categories, posts } from '@prisma/client';
 import { useRouter } from 'next/navigation';
 import CharacterCount from '@tiptap/extension-character-count';
 import BodyEditor from './CreatePost/BodyEditor';
 import { Image as CustomTiptapImage } from '@/app/helpers/tiptap';
-import { customFetch } from '../helpers/auth';
+import { uploadImage } from '../helpers/s3';
+import { deleteImages } from '../actions/images';
+import { createPost, editPost } from '../actions/posts';
 
 interface ITextEditor {
   categories?: categories[];
-  createPost: (args: ICreatePostRequest) => Promise<void>;
+  post?: posts;
 }
 
-const TextEditor = ({ categories, createPost }: ITextEditor) => {
-  const [coverImage, setCoverImage] = useState('');
+const TextEditor = ({ categories, post }: ITextEditor) => {
+  const [coverImage, setCoverImage] = useState(post?.cover_image || '');
   const [file, setFile] = useState<File | null>(null);
   const router = useRouter();
   const titleEditor = useEditor({
     extensions: [StarterKit, CharacterCount.configure({ limit: 100 })],
-    content: '<h1>This is the title of your article!</h1>',
+    content: post?.title || '<h1>This is the title of your article!</h1>',
     injectCSS: false,
   });
 
   const summaryEditor = useEditor({
     extensions: [StarterKit, CharacterCount.configure({ limit: 300 })],
-    content: '<h2>Write a quick summary!</h2>',
+    content: post?.summary || '<h2>Write a quick summary!</h2>',
     injectCSS: false,
   });
 
   const bodyEditor = useEditor({
     extensions: [StarterKit, CustomTiptapImage],
-    content: '<p>Hello World! 🌎️</p>',
+    content: post?.html_content || '<p>Hello World! 🌎️</p>',
   });
 
-  const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<number[]>(
+    post?.post_categories?.map((category) => category.categories_id) || []
+  );
   const uploadedImageKeys = useRef<string[]>([]);
   const shouldDeleteImages = useRef(true);
 
@@ -50,6 +52,16 @@ const TextEditor = ({ categories, createPost }: ITextEditor) => {
   }, []);
 
   const handleSubmit = async () => {
+    if (post) {
+      await editPost({
+        id: post?.id,
+        categoryIds: selectedCategories,
+        html_content: bodyEditor?.getHTML() || '',
+        summary: summaryEditor?.getHTML() || '',
+        title: titleEditor?.getHTML() || '',
+      });
+      return;
+    }
     const imagePath = file ? await uploadImage(file) : '';
 
     try {
@@ -86,20 +98,6 @@ const TextEditor = ({ categories, createPost }: ITextEditor) => {
 
   function getIsCategorySelected(targetIid: number) {
     return !!selectedCategories.find((id) => id === targetIid);
-  }
-
-  async function deleteImages(imageIds: string[]) {
-    try {
-      await customFetch(process.env.NEXT_PUBLIC_BASE_URL + '/api/image', {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ imageIds }),
-      });
-    } catch (error) {
-      console.error(error);
-    }
   }
 
   async function handleImageSelect(e: React.ChangeEvent<HTMLInputElement>) {
@@ -148,7 +146,7 @@ const TextEditor = ({ categories, createPost }: ITextEditor) => {
             >
               <span className="material-symbols-outlined">close</span>
             </button>
-            <Image
+            <img
               src={coverImage}
               alt=""
               width={100}
@@ -174,7 +172,6 @@ const TextEditor = ({ categories, createPost }: ITextEditor) => {
       <EditorContent editor={summaryEditor} className="text-4xl" />
       <BodyEditor
         editor={bodyEditor}
-        deleteImages={deleteImages}
         updateUploadedImagesList={(key) => uploadedImageKeys.current.push(key)}
       />
       <div className="mt-5">
