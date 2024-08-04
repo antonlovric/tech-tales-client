@@ -3,7 +3,7 @@ import PostCategoriesFilter from '@/app/components/PostCategoriesFilter';
 import PostsSearch from '@/app/components/PostsSearch';
 import PageSizeSelector from '@/app/components/UI/PageSizeSelector';
 import Pagination from '@/app/components/UI/Pagination';
-import { prisma } from '@/app/helpers/api';
+import { customFetch } from '@/app/helpers/auth';
 import Link from 'next/link';
 import React from 'react';
 
@@ -26,60 +26,21 @@ const Posts = async ({ searchParams }: IPostsPage) => {
   const activePageNumber: number = parseInt(searchParams?.activePage || '1');
 
   const pageSize: number = parseInt(searchParams?.pageSize || '6');
-  const whereClause: any = {};
-  if (parsedSearchQuery) {
-    whereClause['OR'] = [
-      {
-        title: {
-          contains: parsedSearchQuery,
-          mode: 'insensitive',
-        },
-      },
-    ];
-  }
+  const postsRes = await customFetch(
+    `${process.env.API_URL}/posts?search=${encodeURIComponent(
+      parsedSearchQuery
+    )}&categories=[${encodeURIComponent(
+      parsedCategoriesQuery.toString()
+    )}]&pageSize=${pageSize}&page=${activePageNumber}`
+  );
+  const postData = await postsRes.json();
 
-  if (parsedCategoriesQuery.length > 0) {
-    whereClause['OR'] = whereClause['OR'] || [];
-    whereClause['OR'].push({
-      post_categories: {
-        some: {
-          categories_id: {
-            in: parsedCategoriesQuery,
-          },
-        },
-      },
-    });
-  }
-
-  const postCount = await prisma.posts.count({
-    where: whereClause,
-  });
-
-  function getSkipValue() {
-    if (activePageNumber > Math.ceil(postCount / pageSize)) {
-      return 0;
-    }
-    return pageSize * (activePageNumber - 1);
-  }
-
-  const posts = await prisma.posts.findMany({
-    include: {
-      author: true,
-      post_categories: {
-        include: {
-          categories: true,
-        },
-      },
-    },
-    where: whereClause,
-    take: pageSize,
-    skip: getSkipValue(),
-  });
-
-  const categories = await prisma.categories.findMany();
-
+  const posts = postData.posts;
+  const postCount = posts.length;
   const numberOfPages = Math.ceil(postCount / pageSize);
 
+  const categoriesRes = await customFetch(`${process.env.API_URL}/categories`);
+  const categories = await categoriesRes.json();
   return (
     <div className="w-11/12 mx-auto">
       <div>

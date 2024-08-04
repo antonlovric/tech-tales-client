@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation';
 import CharacterCount from '@tiptap/extension-character-count';
 import BodyEditor from './CreatePost/BodyEditor';
 import { Image as CustomTiptapImage } from '@/app/helpers/tiptap';
+import { customFetch } from '../helpers/auth';
 
 interface ITextEditor {
   categories?: categories[];
@@ -89,7 +90,7 @@ const TextEditor = ({ categories, createPost }: ITextEditor) => {
 
   async function deleteImages(imageIds: string[]) {
     try {
-      await fetch(process.env.NEXT_PUBLIC_BASE_URL + '/api/image', {
+      await customFetch(process.env.NEXT_PUBLIC_BASE_URL + '/api/image', {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

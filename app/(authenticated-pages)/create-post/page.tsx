@@ -1,6 +1,5 @@
 import TextEditor from '@/app/components/TextEditor';
-import { prisma } from '@/app/helpers/api';
-import { getActiveUser } from '@/app/helpers/auth';
+import { customFetch, getActiveUser } from '@/app/helpers/auth';
 import { JSONContent } from '@tiptap/react';
 import { revalidatePath } from 'next/cache';
 import React from 'react';
@@ -18,7 +17,8 @@ export interface IImageUploadResponse {
 }
 
 const CreatePost = async () => {
-  const categories = await prisma.categories.findMany();
+  const categoriesRes = await customFetch(`${process.env.API_URL}/categories`);
+  const categories = await categoriesRes.json();
 
   async function handleCreate(props: ICreatePostRequest) {
     'use server';
@@ -26,8 +26,9 @@ const CreatePost = async () => {
     try {
       const activeUser = getActiveUser();
       if (activeUser?.id) {
-        const res = await prisma.posts.create({
-          data: {
+        await customFetch(`${process.env.API_URL}/posts`, {
+          method: 'POST',
+          body: JSON.stringify({
             html_content: props.html_content,
             json_content: props.json_content,
             summary: props.summary,
@@ -43,7 +44,7 @@ const CreatePost = async () => {
             },
             users_id: activeUser.id,
             cover_image: props.coverImagePath,
-          },
+          }),
         });
       }
       revalidatePath('/');

@@ -1,11 +1,11 @@
 'use server';
 
 import { users } from '@prisma/client';
-import { prisma } from '../helpers/api';
+import { customFetch } from '../helpers/auth';
 
 export async function editUser(userId: number, user: Partial<users>) {
-  return prisma.users.update({
-    where: { id: userId },
-    data: { ...user },
+  return customFetch(`${process.env.API_URL}/users/${userId}`, {
+    method: 'PATCH',
+    body: JSON.stringify({ ...user }),
   });
 }

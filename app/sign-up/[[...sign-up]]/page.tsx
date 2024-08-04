@@ -3,9 +3,9 @@ import Image from 'next/image';
 import { exo } from '@/app/layout';
 import { Metadata } from 'next';
 import SignUpForm, { IUserSignUpForm } from '@/app/components/SignUpForm';
-import { prisma } from '@/app/helpers/api';
 import { hash } from 'argon2';
 import { redirect } from 'next/navigation';
+import { customFetch } from '@/app/helpers/auth';
 
 export const metadata: Metadata = {
   title: 'Tech Tales | Sign up',
@@ -14,20 +14,16 @@ export const metadata: Metadata = {
 const SignUpPage = () => {
   async function handleSignUp(values: IUserSignUpForm) {
     'use server';
-    const userExist = await prisma.users.findFirst({
-      where: { email: values.email },
+    await customFetch(`${process.env.API_URL}/sign-up`, {
+      method: 'POST',
+      body: JSON.stringify({
+        first_name: values.firstName,
+        last_name: values.lastName,
+        email: values.email,
+        password: await hash(values.password),
+      }),
     });
-    if (!userExist) {
-      await prisma.users.create({
-        data: {
-          first_name: values.firstName,
-          last_name: values.lastName,
-          email: values.email,
-          password: await hash(values.password),
-        },
-      });
-      redirect('/');
-    }
+    redirect('/');
   }
 
   return (

@@ -1,11 +1,6 @@
 import PostActions, { TVote } from '@/app/components/PostOverview/PostActions';
 import PostComments from '@/app/components/PostOverview/PostComments';
-import {
-  incrementPostLikeCount,
-  incrementPostVisitCount,
-} from '@/app/helpers/analytics';
-import { prisma } from '@/app/helpers/api';
-import { getActiveUser } from '@/app/helpers/auth';
+import { customFetch, getActiveUser } from '@/app/helpers/auth';
 import { formatDate } from '@/app/helpers/global';
 import DOMPurify from 'isomorphic-dompurify';
 import Link from 'next/link';
@@ -16,34 +11,15 @@ interface IPostPage {
 }
 
 const Post = async ({ params }: IPostPage) => {
-  const COMMENT_PAGE_SIZE = 10;
-
-  const post = await prisma.posts.findFirst({
-    where: { id: { equals: parseInt(params.postId) } },
-    include: {
-      author: true,
-      post_categories: { include: { categories: true } },
-      post_votes: true,
-      comments: {
-        skip: parseInt(params.commentPage || '0'),
-        take: COMMENT_PAGE_SIZE,
-        orderBy: { created_at: 'asc' },
-        include: {
-          users: {
-            select: { first_name: true, last_name: true, profile_image: true },
-          },
-        },
-      },
-    },
-  });
+  const postRes = await customFetch(
+    `${process.env.API_URL}/posts/post-details/${params.postId}`
+  );
+  const post = await postRes.json();
 
   if (post?.id) {
-    incrementPostVisitCount(post.id);
+    customFetch(`${process.env.API_URL}/analytics/post-visit/${params.postId}`);
   }
-
-  const commentCount = await prisma.comments.count({
-    where: { posts_id: post?.id },
-  });
+  const commentCount = await post.comments.length;
 
   const activeUser = getActiveUser();
 
@@ -71,23 +47,34 @@ const Post = async ({ params }: IPostPage) => {
     try {
       if (activeUser && post) {
         if (vote === null) {
-          const removedVote = await prisma.post_votes.delete({
-            where: {
-              user_id_post_id: { post_id: post.id, user_id: activeUser?.id },
-            },
-          });
+          const removedVoteRes = await customFetch(
+            `${process.env.API_URL}/posts/remove-vote`,
+            {
+              method: 'DELETE',
+              body: JSON.stringify({
+                post_id: post.id,
+                user_id: activeUser.id,
+              }),
+            }
+          );
+          const removedVote = await removedVoteRes.json();
           return removedVote;
         }
         if (vote === 'up') {
-          incrementPostLikeCount(post.id);
+          customFetch(`${process.env.API_URL}/analytics/post-like/${post.id}`);
         }
-        const updatedVote = await prisma.post_votes.upsert({
-          where: {
-            user_id_post_id: { post_id: post.id, user_id: activeUser?.id },
-          },
-          create: { type: vote, post_id: post.id, user_id: activeUser?.id },
-          update: { type: vote, post_id: post.id, user_id: activeUser?.id },
-        });
+        const updatedVoteRes = await customFetch(
+          `${process.env.API_URL}/posts/update-vote`,
+          {
+            method: 'POST',
+            body: JSON.stringify({
+              vote,
+              post_id: post.id,
+              user_id: activeUser.id,
+            }),
+          }
+        );
+        const updatedVote = await updatedVoteRes.json();
         return updatedVote;
       }
       return null;

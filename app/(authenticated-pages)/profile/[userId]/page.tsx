@@ -1,9 +1,8 @@
-import { prisma } from '@/app/helpers/api';
 import React from 'react';
 
 import PostCard from '@/app/components/PostCard';
 import Link from 'next/link';
-import { getActiveUser } from '@/app/helpers/auth';
+import { customFetch, getActiveUser } from '@/app/helpers/auth';
 import EditableProfileIcon from '@/app/components/EditableProfileIcon';
 import ProfileBioEditor from '@/app/components/ProfileBioEditor';
 import ProfileDetails from '@/app/components/ProfileDetails';
@@ -13,14 +12,10 @@ interface IProfilePage {
 }
 
 const UserProfile = async ({ params }: IProfilePage) => {
-  const profile = await prisma.users.findFirst({
-    where: { id: { equals: parseInt(params.userId || '') } },
-    include: {
-      posts: {
-        include: { post_categories: { include: { categories: true } } },
-      },
-    },
-  });
+  const profileRes = await customFetch(
+    `${process.env.API_URL}/user/${params.userId}`
+  );
+  const profile = await profileRes.json();
   const activeUser = getActiveUser();
   function getCanEdit() {
     return activeUser?.id === profile?.id;
@@ -34,9 +29,9 @@ const UserProfile = async ({ params }: IProfilePage) => {
     if (profile) {
       try {
         if (profileImageUrl) {
-          const updatedProfile = await prisma.users.update({
-            where: { id: profile.id },
-            data: { profile_image: profileImageUrl },
+          await customFetch(`${process.env.API_URL}/user/${params.userId}`, {
+            method: 'PATCH',
+            body: JSON.stringify({ profile_image: profileImageUrl }),
           });
         }
       } catch (error) {
@@ -50,7 +45,10 @@ const UserProfile = async ({ params }: IProfilePage) => {
     'use server';
     if (profile) {
       try {
-        await prisma.users.update({ where: { id: profile.id }, data: { bio } });
+        await customFetch(`${process.env.API_URL}/user/${params.userId}`, {
+          method: 'PATCH',
+          body: JSON.stringify({ bio }),
+        });
       } catch (error) {
         console.error(error);
       }

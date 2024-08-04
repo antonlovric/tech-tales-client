@@ -2,15 +2,22 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { exo } from '../layout';
-import { getActiveUser, getIsLoggedIn, logout } from '../helpers/auth';
+import {
+  customFetch,
+  getActiveUser,
+  getIsLoggedIn,
+  logout,
+} from '../helpers/auth';
 import ProfileIcon from './ProfileIcon';
-import { prisma } from '../helpers/api';
 import HeaderSearch from './HeaderSearch';
 
 const Header = async () => {
   const isLoggedIn = getIsLoggedIn();
   const user = getActiveUser();
-  const userProfile = await prisma.users.findFirst({ where: { id: user?.id } });
+  const userProfileRes = await customFetch(
+    `${process.env.API_URL}/users/${user.id}`
+  );
+  const userProfile = await userProfileRes.json();
 
   return (
     <header

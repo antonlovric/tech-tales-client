@@ -1,49 +1,31 @@
 import { Metadata } from 'next';
 import FeaturedPost from '../components/FeaturedPost';
 import { inter } from './layout';
-import { getRelevantPostId, updateRelevanceScores } from '../helpers/analytics';
-import { prisma } from '../helpers/api';
 import { getSanitizedHtml } from '../helpers/global';
 import Link from 'next/link';
+import { customFetch } from '../helpers/auth';
 
 export const metadata: Metadata = {
   title: 'Tech Tales | Home',
 };
 
 export default async function Home() {
-  updateRelevanceScores();
-  const relevantPostId = await getRelevantPostId();
+  const relevantPostRes = await customFetch(
+    `${process.env.API_URL}/analytics/relevant_post`,
+    {
+      method: 'GET',
+    }
+  );
+  const relevantPost = await relevantPostRes.json();
 
-  const relevantPost = await prisma.posts.findFirst({
-    where: {
-      id: {
-        equals: relevantPostId,
-      },
-    },
-    include: {
-      author: true,
-      post_categories: {
-        include: {
-          categories: true,
-        },
-      },
-    },
-  });
+  const postsByCategoryRes = await customFetch(
+    `${process.env.API_URL}/posts/categories`,
+    {
+      method: 'GET',
+    }
+  );
+  const postsByCategory = await postsByCategoryRes.json();
 
-  const postsByCategory = await prisma.categories.findMany({
-    include: {
-      post_categories: {
-        include: {
-          posts: true,
-        },
-        orderBy: {
-          posts: {
-            created_at: { sort: 'desc' },
-          },
-        },
-      },
-    },
-  });
   const filteredPostCategories = postsByCategory.filter(
     (category) => category.post_categories.length
   );

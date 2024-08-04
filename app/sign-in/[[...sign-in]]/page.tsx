@@ -2,10 +2,11 @@ import React from 'react';
 import { exo } from '@/app/layout';
 import { Metadata } from 'next';
 import SignInForm, { IUserSignInForm } from '@/app/components/SignInForm';
-import { verify } from 'argon2';
-import { prisma } from '@/app/helpers/api';
-import { SignJWT } from 'jose';
-import { HASH_ALG, getSecretKey } from '@/app/helpers/auth';
+import {
+  customFetch,
+  setAccessToken,
+  setRefreshToken,
+} from '@/app/helpers/auth';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import dayjs from 'dayjs';
@@ -17,36 +18,24 @@ export const metadata: Metadata = {
 const SignInPage = async () => {
   async function handleSignIn(values: IUserSignInForm) {
     'use server';
-    const user = await prisma.users.findFirst({
-      where: { email: values.email },
-    });
-    if (!user) {
-      return;
-    }
-    const isValidSignIn = await verify(user.password, values.password);
-    if (!isValidSignIn) {
-      return;
-    }
-    const token = await new SignJWT({
-      jti: user.email,
-    })
-      .setProtectedHeader({ alg: HASH_ALG })
-      .setIssuedAt()
-      .setExpirationTime('2h')
-      .sign(getSecretKey());
-    cookies().set('auth', token, {
-      httpOnly: true,
-      sameSite: true,
-      value: token,
-      expires: dayjs().add(2, 'hours').toDate(),
-      path: '/',
-    });
+    const signInRes = await customFetch(
+      `${process.env.API_URL}/users/sign-in`,
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          email: values.email,
+          password: values.password,
+        }),
+      }
+    );
+    const user = await signInRes.json();
+    setAccessToken(user.accessToken);
+    setRefreshToken(user.refreshToken);
     cookies().set('user', JSON.stringify(user), {
       expires: dayjs().add(2, 'hours').toDate(),
       path: '/',
       value: JSON.stringify(user),
     });
-
     redirect('/');
   }
 
