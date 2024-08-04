@@ -13,7 +13,7 @@ interface IProfilePage {
 
 const UserProfile = async ({ params }: IProfilePage) => {
   const profileRes = await customFetch(
-    `${process.env.API_URL}/user/${params.userId}`
+    `${process.env.API_URL}/users/${params.userId}`
   );
   const profile = await profileRes.json();
   const activeUser = getActiveUser();
