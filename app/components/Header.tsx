@@ -19,6 +19,8 @@ const Header = async () => {
   );
   const userProfile = await userProfileRes.json();
 
+  console.log(isLoggedIn);
+
   return (
     <header
       className={`${exo.className} bg-dark text-white flex items-center justify-between`}
@@ -46,7 +48,7 @@ const Header = async () => {
       </nav>
       <div className="flex items-center gap-5">
         <HeaderSearch />
-        {isLoggedIn ? (
+        {userProfile?.profile_image ? (
           <ProfileIcon logout={logout} user={userProfile} />
         ) : (
           <div className="flex items-center gap-2">
