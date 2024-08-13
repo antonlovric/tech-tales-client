@@ -120,7 +120,7 @@ const TextEditor = ({ categories, post }: ITextEditor) => {
 
   return (
     <main>
-      <EditorContent editor={titleEditor} className="text-4xl" />
+      <EditorContent editor={titleEditor} className="text-3xl" />
       <hr className="mt-2 mb-6" />
       <div className="flex justify-end items-center gap-2">
         {categories?.map((category) => (
@@ -158,7 +158,9 @@ const TextEditor = ({ categories, post }: ITextEditor) => {
       ) : (
         <div className="w-full flex justify-center relative py-5">
           <label className="pointer" htmlFor="cover-image">
-            <img src="https://via.assets.so/img.jpg?w=400&h=200&tc=#FFF&bg=#212121&t=Upload cover image" />
+            <div className="bg-blog-blue text-dark-gray w-[400px] h-[250px] flex items-center justify-center cursor-pointer">
+              <span className="material-symbols-outlined !text-8xl">image</span>
+            </div>
           </label>
           <input
             className="hidden"
@@ -169,7 +171,7 @@ const TextEditor = ({ categories, post }: ITextEditor) => {
           />
         </div>
       )}
-      <EditorContent editor={summaryEditor} className="text-4xl" />
+      <EditorContent editor={summaryEditor} className="text-2xl" />
       <BodyEditor
         editor={bodyEditor}
         updateUploadedImagesList={(key) => uploadedImageKeys.current.push(key)}
