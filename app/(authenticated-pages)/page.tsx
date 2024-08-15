@@ -18,7 +18,8 @@ export default async function Home() {
       method: 'GET',
     }
   );
-  const relevantPost = await relevantPostRes.json();
+
+  const relevantPost = relevantPostRes.ok ? await relevantPostRes.json() : null;
 
   const postsByCategoryRes = await customFetch(
     `${process.env.API_URL}/posts/categories`,

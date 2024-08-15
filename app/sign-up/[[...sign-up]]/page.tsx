@@ -14,16 +14,22 @@ export const metadata: Metadata = {
 const SignUpPage = () => {
   async function handleSignUp(values: IUserSignUpForm) {
     'use server';
-    await customFetch(`${process.env.API_URL}/sign-up`, {
-      method: 'POST',
-      body: JSON.stringify({
-        first_name: values.firstName,
-        last_name: values.lastName,
-        email: values.email,
-        password: await hash(values.password),
-      }),
-    });
-    redirect('/');
+    try {
+      await customFetch(`${process.env.API_URL}/users/sign-up`, {
+        method: 'POST',
+        body: JSON.stringify({
+          user: {
+            first_name: values.firstName,
+            last_name: values.lastName,
+            email: values.email,
+            password: await hash(values.password),
+          },
+        }),
+      });
+      redirect('/');
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   return (
