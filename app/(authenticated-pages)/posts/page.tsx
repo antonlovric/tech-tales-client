@@ -36,11 +36,12 @@ const Posts = async ({ searchParams }: IPostsPage) => {
   const postData = await postsRes.json();
 
   const posts = postData.posts;
-  const postCount = posts.length;
+  const postCount = postData.count || 1;
   const numberOfPages = Math.ceil(postCount / pageSize);
 
   const categoriesRes = await customFetch(`${process.env.API_URL}/categories`);
   const categories = await categoriesRes.json();
+
   return (
     <div className="w-11/12 mx-auto">
       <div>
