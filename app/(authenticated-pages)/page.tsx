@@ -1,9 +1,11 @@
 import { Metadata } from 'next';
 import FeaturedPost from '../components/FeaturedPost';
-import { inter } from './layout';
 import { getSanitizedHtml } from '../helpers/global';
 import Link from 'next/link';
 import { customFetch } from '../helpers/auth';
+import { Inter } from 'next/font/google';
+
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Tech Tales | Home',
