@@ -19,6 +19,7 @@ interface ITextEditor {
 const TextEditor = ({ categories, post }: ITextEditor) => {
   const [coverImage, setCoverImage] = useState(post?.cover_image || '');
   const [file, setFile] = useState<File | null>(null);
+  const [isCreating, setIsCreating] = useState(false);
   const router = useRouter();
   const titleEditor = useEditor({
     extensions: [StarterKit, CharacterCount.configure({ limit: 100 })],
@@ -53,18 +54,26 @@ const TextEditor = ({ categories, post }: ITextEditor) => {
 
   const handleSubmit = async () => {
     if (post) {
-      await editPost({
-        id: post?.id,
-        categoryIds: selectedCategories,
-        html_content: bodyEditor?.getHTML() || '',
-        summary: summaryEditor?.getHTML() || '',
-        title: titleEditor?.getHTML() || '',
-      });
-      return;
+      try {
+        setIsCreating(true);
+        await editPost({
+          id: post?.id,
+          categoryIds: selectedCategories,
+          html_content: bodyEditor?.getHTML() || '',
+          summary: summaryEditor?.getHTML() || '',
+          title: titleEditor?.getHTML() || '',
+        });
+        return;
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsCreating(false);
+      }
     }
-    const imagePath = file ? await uploadImage(file) : '';
 
     try {
+      setIsCreating(true);
+      const imagePath = file ? await uploadImage(file) : '';
       shouldDeleteImages.current = false;
 
       await createPost({
@@ -74,11 +83,12 @@ const TextEditor = ({ categories, post }: ITextEditor) => {
         title: titleEditor?.getHTML() || '',
         coverImagePath: imagePath,
       });
+      router.replace('/');
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsCreating(false);
     }
-
-    router.replace('/');
   };
 
   function selectCategory(id: number) {
@@ -178,7 +188,7 @@ const TextEditor = ({ categories, post }: ITextEditor) => {
       />
       <div className="mt-5">
         <button onClick={handleSubmit} className="button-primary">
-          Submit
+          {isCreating ? 'Loading' : 'Submit'}
         </button>
       </div>
     </main>

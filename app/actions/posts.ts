@@ -3,11 +3,9 @@
 import { revalidatePath } from 'next/cache';
 import { customFetch, getActiveUser } from '../helpers/auth';
 import { IAddComment } from './types';
-import { JSONContent } from '@tiptap/react';
 
 export interface ICreatePostRequest {
   html_content: string;
-  json_content?: JSONContent;
   categoryIds: number[];
   title: string;
   summary: string;
@@ -17,7 +15,6 @@ export interface ICreatePostRequest {
 export interface IEditPostRequest {
   id: number;
   html_content: string;
-  json_content?: JSONContent;
   categoryIds: number[];
   title: string;
   summary: string;
@@ -51,7 +48,6 @@ export async function createPost(props: ICreatePostRequest) {
         body: JSON.stringify({
           post: {
             html_content: props.html_content,
-            json_content: props.json_content,
             summary: props.summary,
             title: props.title,
             post_categories: {
@@ -89,7 +85,6 @@ export async function editPost(props: IEditPostRequest) {
           post: {
             id: props.id,
             html_content: props.html_content,
-            json_content: props.json_content,
             summary: props.summary,
             title: props.title,
             post_categories: {

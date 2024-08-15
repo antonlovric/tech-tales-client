@@ -1,10 +1,8 @@
 import TextEditor from '@/app/components/TextEditor';
 import { customFetch } from '@/app/helpers/auth';
-import { JSONContent } from '@tiptap/react';
 import React from 'react';
 export interface ICreatePostRequest {
   html_content: string;
-  json_content?: JSONContent;
   categoryIds: number[];
   title: string;
   summary: string;
