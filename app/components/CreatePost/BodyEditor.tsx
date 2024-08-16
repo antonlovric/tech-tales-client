@@ -82,13 +82,11 @@ const BodyEditor = (props: IBodyEditor) => {
     <div className="flex flex-col gap-2 mt-4">
       <div className="flex items-center gap-2">
         <DropdownMenu.Root>
-          <DropdownMenu.Trigger>
-            <button
-              onClick={() => setIsFontDropdownVisible(!isFontDropdownVisible)}
-              className="relative bg-dark-gray px-2 py-2 border border-light-gray rounded-md"
-            >
-              <span>{activeFontType}</span>
-            </button>
+          <DropdownMenu.Trigger
+            onClick={() => setIsFontDropdownVisible(!isFontDropdownVisible)}
+            className="relative bg-dark-gray px-2 py-2 border border-light-gray rounded-md"
+          >
+            <span>{activeFontType}</span>
           </DropdownMenu.Trigger>
           <DropdownMenu.Portal>
             <DropdownMenu.Content>

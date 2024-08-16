@@ -42,7 +42,7 @@ const TextEditor = ({ categories, post }: ITextEditor) => {
     post?.post_categories?.map((category) => category.categories_id) || []
   );
   const uploadedImageKeys = useRef<string[]>([]);
-  const shouldDeleteImages = useRef(true);
+  const shouldDeleteImages = useRef(false);
 
   useEffect(() => {
     return () => {
@@ -63,11 +63,11 @@ const TextEditor = ({ categories, post }: ITextEditor) => {
           summary: summaryEditor?.getHTML() || '',
           title: titleEditor?.getHTML() || '',
         });
-        return;
       } catch (error) {
         console.error(error);
       } finally {
         setIsCreating(false);
+        return;
       }
     }
 
