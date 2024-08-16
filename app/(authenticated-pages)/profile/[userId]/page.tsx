@@ -13,7 +13,7 @@ interface IProfilePage {
 
 const UserProfile = async ({ params }: IProfilePage) => {
   const profileRes = await customFetch(
-    `${process.env.API_URL}/users/${params.userId}`
+    `${process.env.NEXT_PUBLIC_API_URL}/users/${params.userId}`
   );
   const profile = await profileRes.json();
   const activeUser = getActiveUser();
@@ -29,10 +29,13 @@ const UserProfile = async ({ params }: IProfilePage) => {
     if (profile) {
       try {
         if (profileImageUrl) {
-          await customFetch(`${process.env.API_URL}/user/${params.userId}`, {
-            method: 'PATCH',
-            body: JSON.stringify({ profile_image: profileImageUrl }),
-          });
+          await customFetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/user/${params.userId}`,
+            {
+              method: 'PATCH',
+              body: JSON.stringify({ profile_image: profileImageUrl }),
+            }
+          );
         }
       } catch (error) {
         console.error('ERROR');
@@ -45,10 +48,13 @@ const UserProfile = async ({ params }: IProfilePage) => {
     'use server';
     if (profile) {
       try {
-        await customFetch(`${process.env.API_URL}/user/${params.userId}`, {
-          method: 'PATCH',
-          body: JSON.stringify({ bio }),
-        });
+        await customFetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/user/${params.userId}`,
+          {
+            method: 'PATCH',
+            body: JSON.stringify({ bio }),
+          }
+        );
       } catch (error) {
         console.error(error);
       }

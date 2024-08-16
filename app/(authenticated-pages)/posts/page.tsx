@@ -27,7 +27,7 @@ const Posts = async ({ searchParams }: IPostsPage) => {
 
   const pageSize: number = parseInt(searchParams?.pageSize || '6');
   const postsRes = await customFetch(
-    `${process.env.API_URL}/posts?search=${encodeURIComponent(
+    `${process.env.NEXT_PUBLIC_API_URL}/posts?search=${encodeURIComponent(
       parsedSearchQuery
     )}&categories=[${encodeURIComponent(
       parsedCategoriesQuery.toString()
@@ -39,7 +39,9 @@ const Posts = async ({ searchParams }: IPostsPage) => {
   const postCount = postData.count || 1;
   const numberOfPages = Math.ceil(postCount / pageSize);
 
-  const categoriesRes = await customFetch(`${process.env.API_URL}/categories`);
+  const categoriesRes = await customFetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/categories`
+  );
   const categories = await categoriesRes.json();
 
   return (

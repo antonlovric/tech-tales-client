@@ -19,7 +19,7 @@ const SignInPage = async () => {
   async function handleSignIn(values: IUserSignInForm) {
     'use server';
     const signInRes = await customFetch(
-      `${process.env.API_URL}/users/sign-in`,
+      `${process.env.NEXT_PUBLIC_API_URL}/users/sign-in`,
       {
         method: 'POST',
         body: JSON.stringify({

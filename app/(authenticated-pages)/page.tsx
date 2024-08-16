@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 export default async function Home() {
   const relevantPostRes = await customFetch(
-    `${process.env.API_URL}/analytics/relevant_post`,
+    `${process.env.NEXT_PUBLIC_API_URL}/analytics/relevant_post`,
     {
       method: 'GET',
     }
@@ -22,7 +22,7 @@ export default async function Home() {
   const relevantPost = relevantPostRes.ok ? await relevantPostRes.json() : null;
 
   const postsByCategoryRes = await customFetch(
-    `${process.env.API_URL}/posts/categories`,
+    `${process.env.NEXT_PUBLIC_API_URL}/posts/categories`,
     {
       method: 'GET',
     }

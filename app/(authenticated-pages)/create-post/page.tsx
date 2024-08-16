@@ -14,7 +14,9 @@ export interface IImageUploadResponse {
 }
 
 const CreatePost = async () => {
-  const categoriesRes = await customFetch(`${process.env.API_URL}/categories`);
+  const categoriesRes = await customFetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/categories`
+  );
   const categories = await categoriesRes.json();
 
   return (

@@ -68,7 +68,7 @@ export const customFetch: typeof fetch = async (url, options) => {
   if (res.status === 401) {
     const refreshToken = cookies().get('refreshToken')?.value || '';
     const tokensRes = await fetch(
-      `${process.env.API_URL}/users/refresh-token`,
+      `${process.env.NEXT_PUBLIC_API_URL}/users/refresh-token`,
       {
         method: 'POST',
         body: JSON.stringify({

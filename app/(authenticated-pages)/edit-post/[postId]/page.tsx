@@ -7,11 +7,13 @@ interface IEditPostPage {
 }
 
 const EditPost = async ({ params }: IEditPostPage) => {
-  const categoriesRes = await customFetch(`${process.env.API_URL}/categories`);
+  const categoriesRes = await customFetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/categories`
+  );
   const categories = await categoriesRes.json();
 
   const postRes = await customFetch(
-    `${process.env.API_URL}/posts/edit-post-details/${params.postId}`
+    `${process.env.NEXT_PUBLIC_API_URL}/posts/edit-post-details/${params.postId}`
   );
   const post = await postRes.json();
 

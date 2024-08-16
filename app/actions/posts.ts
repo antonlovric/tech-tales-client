@@ -26,8 +26,10 @@ export async function addComment(args: IAddComment) {
   const activeUser = getActiveUser();
 
   if (!activeUser) throw new Error('User not logged in');
-  customFetch(`${process.env.API_URL}/analytics/post-comment/${args.post_id}`);
-  await customFetch(`${process.env.API_URL}/posts/add-comment`, {
+  customFetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/analytics/post-comment/${args.post_id}`
+  );
+  await customFetch(`${process.env.NEXT_PUBLIC_API_URL}/posts/add-comment`, {
     body: JSON.stringify({
       comment: args.comment,
       post_id: args.post_id,
@@ -43,7 +45,7 @@ export async function createPost(props: ICreatePostRequest) {
   try {
     const activeUser = getActiveUser();
     if (activeUser?.id) {
-      await customFetch(`${process.env.API_URL}/posts`, {
+      await customFetch(`${process.env.NEXT_PUBLIC_API_URL}/posts`, {
         method: 'POST',
         body: JSON.stringify({
           post: {
@@ -79,7 +81,7 @@ export async function editPost(props: IEditPostRequest) {
   try {
     const activeUser = getActiveUser();
     if (activeUser?.id) {
-      await customFetch(`${process.env.API_URL}/posts`, {
+      await customFetch(`${process.env.NEXT_PUBLIC_API_URL}/posts`, {
         method: 'PUT',
         body: JSON.stringify({
           post: {
@@ -114,7 +116,10 @@ export async function deletePost(postId: number) {
   'use server';
   const activeUser = getActiveUser();
   if (!activeUser) throw new Error('User not logged in');
-  return await customFetch(`${process.env.API_URL}/posts/${postId}`, {
-    method: 'DELETE',
-  });
+  return await customFetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/posts/${postId}`,
+    {
+      method: 'DELETE',
+    }
+  );
 }

@@ -12,12 +12,14 @@ interface IPostPage {
 
 const Post = async ({ params }: IPostPage) => {
   const postRes = await customFetch(
-    `${process.env.API_URL}/posts/post-details/${params.postId}`
+    `${process.env.NEXT_PUBLIC_API_URL}/posts/post-details/${params.postId}`
   );
   const post = await postRes.json();
 
   if (post?.id) {
-    customFetch(`${process.env.API_URL}/analytics/post-visit/${params.postId}`);
+    customFetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/analytics/post-visit/${params.postId}`
+    );
   }
   const commentCount = await post.comments.length;
 
@@ -48,7 +50,7 @@ const Post = async ({ params }: IPostPage) => {
       if (activeUser && post) {
         if (vote === null) {
           const removedVoteRes = await customFetch(
-            `${process.env.API_URL}/posts/remove-vote`,
+            `${process.env.NEXT_PUBLIC_API_URL}/posts/remove-vote`,
             {
               method: 'DELETE',
               body: JSON.stringify({
@@ -61,10 +63,12 @@ const Post = async ({ params }: IPostPage) => {
           return removedVote;
         }
         if (vote === 'up') {
-          customFetch(`${process.env.API_URL}/analytics/post-like/${post.id}`);
+          customFetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/analytics/post-like/${post.id}`
+          );
         }
         const updatedVoteRes = await customFetch(
-          `${process.env.API_URL}/posts/update-vote`,
+          `${process.env.NEXT_PUBLIC_API_URL}/posts/update-vote`,
           {
             method: 'POST',
             body: JSON.stringify({

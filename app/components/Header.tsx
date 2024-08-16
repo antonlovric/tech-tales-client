@@ -15,7 +15,7 @@ const Header = async () => {
   const isLoggedIn = getIsLoggedIn();
   const user = getActiveUser();
   const userProfileRes = await customFetch(
-    `${process.env.API_URL}/users/${user?.id}`
+    `${process.env.NEXT_PUBLIC_API_URL}/users/${user?.id}`
   );
   const userProfile = await userProfileRes.json();
 

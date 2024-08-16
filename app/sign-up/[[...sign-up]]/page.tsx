@@ -15,7 +15,7 @@ const SignUpPage = () => {
   async function handleSignUp(values: IUserSignUpForm) {
     'use server';
     try {
-      await customFetch(`${process.env.API_URL}/users/sign-up`, {
+      await customFetch(`${process.env.NEXT_PUBLIC_API_URL}/users/sign-up`, {
         method: 'POST',
         body: JSON.stringify({
           user: {
