@@ -59,17 +59,17 @@ export default async function Home() {
               <button className="button-primary">More</button>
             </Link>
           </div>
-          <div className="flex items-start gap-8 w-full overflow-x-scroll">
+          <div className="grid md:grid-cols-5 sm:grid-cols-2 grid-cols-1 gap-y-8 gap-x-6 overflow-x-scroll mt-2">
             {category.post_categories.map((post) => (
               <Link
                 href={`post/${post.posts_id}`}
-                className="bg-dark-gray rounded-md p-2 cursor-pointer relative max-w-[350px]"
+                className="bg-dark-gray rounded-md p-2 cursor-pointer h-full flex flex-col justify-between relative"
                 key={`${post.categories_id}-${post.posts_id}`}
               >
                 <img
                   src={post.posts.cover_image || ''}
                   alt=""
-                  className=" h-[250px] w-full object-cover"
+                  className="block rounded-md h-[250px] w-full object-cover"
                 />
                 <span
                   dangerouslySetInnerHTML={{
