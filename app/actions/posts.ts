@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { customFetch, getActiveUser } from '../helpers/auth';
 import { IAddComment } from './types';
+import { TVote } from '../components/PostOverview/PostActions';
 
 export interface ICreatePostRequest {
   html_content: string;
@@ -122,4 +123,47 @@ export async function deletePost(postId: number) {
       method: 'DELETE',
     }
   );
+}
+
+export async function handleVote(vote: TVote, activeUser: any, post: any) {
+  try {
+    if (activeUser && post) {
+      if (vote === null) {
+        const removedVoteRes = await customFetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/posts/remove-vote`,
+          {
+            method: 'DELETE',
+            body: JSON.stringify({
+              post_id: post.id,
+              user_id: activeUser.id,
+            }),
+          }
+        );
+        const removedVote = await removedVoteRes.json();
+        return removedVote;
+      }
+      if (vote === 'up') {
+        customFetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/analytics/post-like/${post.id}`
+        );
+      }
+      const updatedVoteRes = await customFetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/posts/update-vote`,
+        {
+          method: 'POST',
+          body: JSON.stringify({
+            vote,
+            post_id: post.id,
+            user_id: activeUser.id,
+          }),
+        }
+      );
+      const updatedVote = await updatedVoteRes.json();
+      return updatedVote;
+    }
+    return null;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
 }

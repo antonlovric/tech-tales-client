@@ -31,7 +31,7 @@ const FeaturedPost = (props: IFeaturedPost) => {
           <div className="flex items-center gap-3">
             {props.post.post_categories.map((category) => (
               <span
-                key={category.categories_id}
+                key={category.categories.id}
                 className="bg-blog-blue px-2 py-1 rounded-md"
               >
                 {category.categories.name}

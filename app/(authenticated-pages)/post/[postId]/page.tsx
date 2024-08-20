@@ -1,4 +1,4 @@
-import PostActions, { TVote } from '@/app/components/PostOverview/PostActions';
+import PostActions from '@/app/components/PostOverview/PostActions';
 import PostComments from '@/app/components/PostOverview/PostComments';
 import ProfileImage from '@/app/components/UI/ProfileImage';
 import { customFetch, getActiveUser } from '@/app/helpers/auth';
@@ -44,51 +44,6 @@ const Post = async ({ params }: IPostPage) => {
 
   const isDisliked = getIsDisliked();
 
-  async function handleVote(vote: TVote) {
-    'use server';
-
-    try {
-      if (activeUser && post) {
-        if (vote === null) {
-          const removedVoteRes = await customFetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/posts/remove-vote`,
-            {
-              method: 'DELETE',
-              body: JSON.stringify({
-                post_id: post.id,
-                user_id: activeUser.id,
-              }),
-            }
-          );
-          const removedVote = await removedVoteRes.json();
-          return removedVote;
-        }
-        if (vote === 'up') {
-          customFetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/analytics/post-like/${post.id}`
-          );
-        }
-        const updatedVoteRes = await customFetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/posts/update-vote`,
-          {
-            method: 'POST',
-            body: JSON.stringify({
-              vote,
-              post_id: post.id,
-              user_id: activeUser.id,
-            }),
-          }
-        );
-        const updatedVote = await updatedVoteRes.json();
-        return updatedVote;
-      }
-      return null;
-    } catch (error) {
-      console.error(error);
-      return null;
-    }
-  }
-
   const sanitizedTitle = DOMPurify.sanitize(post?.title || '');
   const sanitizedSummary = DOMPurify.sanitize(post?.summary || '');
   const sanitizedBody = DOMPurify.sanitize(post?.html_content || '');
@@ -101,7 +56,7 @@ const Post = async ({ params }: IPostPage) => {
       ></div>
       <div
         dangerouslySetInnerHTML={{ __html: sanitizedSummary }}
-        className="text-xl mb-5"
+        className="text-xl mb-5 text-center"
       ></div>
       <section className="flex flex-col mb-5 w-3/4 mx-auto">
         <div className="flex items-center justify-between">
@@ -128,7 +83,7 @@ const Post = async ({ params }: IPostPage) => {
                 isPostDisliked: isDisliked,
                 commentCount,
               }}
-              updateVote={handleVote}
+              activeUser={activeUser}
             />
           ) : (
             <></>

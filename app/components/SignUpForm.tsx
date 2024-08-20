@@ -1,5 +1,7 @@
 'use client';
 import React, { useState } from 'react';
+import { handleSignUp } from '../actions/users';
+import { useRouter } from 'next/navigation';
 
 export interface IUserSignUpForm {
   firstName: string;
@@ -8,17 +10,14 @@ export interface IUserSignUpForm {
   password: string;
 }
 
-interface ISignUpForm {
-  handleSignUp: (user: IUserSignUpForm) => void;
-}
-
-const SignUpForm = ({ handleSignUp }: ISignUpForm) => {
+const SignUpForm = () => {
   const [formValues, setFormValues] = useState<IUserSignUpForm>({
     email: '',
     firstName: '',
     lastName: '',
     password: '',
   });
+  const { push } = useRouter();
 
   function handleUpdateForm(e: React.ChangeEvent<HTMLInputElement>) {
     e.preventDefault();
@@ -35,12 +34,23 @@ const SignUpForm = ({ handleSignUp }: ISignUpForm) => {
     }
   }
 
-  function submitUser() {
-    handleSignUp(formValues);
+  async function handleSubmit() {
+    try {
+      await handleSignUp(formValues);
+      alert(
+        'Success! Please follow the instructions in the email we sent you and verify your account.'
+      );
+      push('/');
+    } catch (error: any) {
+      console.error(error);
+      if (error?.message) {
+        alert(error?.message);
+      }
+    }
   }
 
   return (
-    <form action={submitUser} className="flex flex-col gap-4">
+    <form action={handleSubmit} className="flex flex-col gap-4">
       <div className="flex flex-col gap-1 align-center">
         <label htmlFor="firstName">First name</label>
         <input
@@ -49,6 +59,7 @@ const SignUpForm = ({ handleSignUp }: ISignUpForm) => {
           id="firstName"
           value={formValues.firstName}
           className="text-white bg-dark-gray rounded-md py-2 px-4 w-full border border-light-gray"
+          name="firstName"
         />
       </div>
       <div className="flex flex-col gap-1 align-center">
@@ -59,6 +70,7 @@ const SignUpForm = ({ handleSignUp }: ISignUpForm) => {
           id="lastName"
           value={formValues.lastName}
           className="text-white bg-dark-gray rounded-md py-2 px-4 w-full border border-light-gray"
+          name="lastName"
         />
       </div>
       <div className="flex flex-col gap-1 align-center">
@@ -69,6 +81,7 @@ const SignUpForm = ({ handleSignUp }: ISignUpForm) => {
           id="email"
           value={formValues.email}
           className="text-white bg-dark-gray rounded-md py-2 px-4 w-full border border-light-gray"
+          name="email"
         />
       </div>
       <div className="flex flex-col gap-1 align-center">
@@ -79,6 +92,7 @@ const SignUpForm = ({ handleSignUp }: ISignUpForm) => {
           id="password"
           value={formValues.password}
           className="text-white bg-dark-gray rounded-md py-2 px-4 w-full border border-light-gray"
+          name="password"
         />
       </div>
       <button type="submit" className="button-primary mt-2">

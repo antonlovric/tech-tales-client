@@ -10,6 +10,7 @@ import {
   users,
 } from '@prisma/client';
 import { useRouter } from 'next/navigation';
+import { handleVote } from '@/app/actions/posts';
 
 interface IPostCategory extends post_categories {
   categories: categories;
@@ -28,7 +29,7 @@ export type TVote = 'up' | 'down' | null;
 
 interface IPostActions {
   post: IPost | null;
-  updateVote: (vote: TVote) => Promise<post_votes | null>;
+  activeUser: any;
 }
 
 const PostActions = (props: IPostActions) => {
@@ -45,13 +46,21 @@ const PostActions = (props: IPostActions) => {
 
   async function handleLike() {
     const voteType = props.post?.isPostLiked ? null : 'up';
-    const updatedVote = await props.updateVote(voteType);
+    const updatedVote = await handleVote(
+      voteType,
+      props.activeUser,
+      props.post
+    );
     setTransition(refresh);
   }
 
   async function handleDislike() {
     const voteType = props.post?.isPostDisliked ? null : 'down';
-    const updatedVote = await props.updateVote(voteType);
+    const updatedVote = await handleVote(
+      voteType,
+      props.activeUser,
+      props.post
+    );
     setTransition(refresh);
   }
 

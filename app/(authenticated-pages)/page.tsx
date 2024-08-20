@@ -62,9 +62,9 @@ export default async function Home() {
           <div className="grid md:grid-cols-5 sm:grid-cols-2 grid-cols-1 gap-y-8 gap-x-6 overflow-x-scroll mt-2">
             {category.post_categories.map((post) => (
               <Link
-                href={`post/${post.posts_id}`}
+                href={`post/${post.posts.id}`}
                 className="bg-dark-gray rounded-md p-2 cursor-pointer h-full flex flex-col justify-between relative"
-                key={`${post.categories_id}-${post.posts_id}`}
+                key={`${post.categories.id}-${post.posts.id}`}
               >
                 <img
                   src={post.posts.cover_image || ''}

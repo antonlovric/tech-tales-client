@@ -1,17 +1,18 @@
 'use client';
 import React, { useState } from 'react';
 import { uploadImage } from '../helpers/s3';
+import { saveProfileImage } from '../actions/users';
 
 interface IEditableProfileIcon {
   initialProfileIconLink: string;
   canEdit?: boolean;
-  saveProfileImage: (image: string) => Promise<void>;
+  userId: number;
 }
 
 const EditableProfileIcon = ({
   initialProfileIconLink,
   canEdit,
-  saveProfileImage,
+  userId,
 }: IEditableProfileIcon) => {
   const [profileIconLink, setProfileIconLink] = useState(
     initialProfileIconLink
@@ -35,7 +36,11 @@ const EditableProfileIcon = ({
   }
 
   async function saveChange(imageUrl: string) {
-    await saveProfileImage(imageUrl);
+    try {
+      await saveProfileImage(imageUrl, userId);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   return (

@@ -3,9 +3,7 @@ import React from 'react';
 import PostCard from '@/app/components/PostCard';
 import Link from 'next/link';
 import { customFetch, getActiveUser } from '@/app/helpers/auth';
-import EditableProfileIcon from '@/app/components/EditableProfileIcon';
-import ProfileBioEditor from '@/app/components/ProfileBioEditor';
-import ProfileDetails from '@/app/components/ProfileDetails';
+import UserInfo from '@/app/components/Profile/UserInfo';
 
 interface IProfilePage {
   params: { userId: string };
@@ -22,70 +20,21 @@ const UserProfile = async ({ params }: IProfilePage) => {
   }
   const canEdit = getCanEdit();
 
-  const profileImageSrc = profile?.profile_image || '/blank_profile_image.svg';
-
-  async function saveProfileImage(profileImageUrl: string) {
-    'use server';
-    if (profile) {
-      try {
-        if (profileImageUrl) {
-          await customFetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/user/${params.userId}`,
-            {
-              method: 'PATCH',
-              body: JSON.stringify({ profile_image: profileImageUrl }),
-            }
-          );
-        }
-      } catch (error) {
-        console.error('ERROR');
-        console.error(error);
-      }
-    }
-  }
-
-  async function saveProfileBio(bio: string) {
-    'use server';
-    if (profile) {
-      try {
-        await customFetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/user/${params.userId}`,
-          {
-            method: 'PATCH',
-            body: JSON.stringify({ bio }),
-          }
-        );
-      } catch (error) {
-        console.error(error);
-      }
-    }
-  }
-
   return (
     <div>
       <main className="">
-        <section className="w-9/12 flex flex-col justify-center items-center mx-auto mb-8">
-          <EditableProfileIcon
-            initialProfileIconLink={profileImageSrc}
-            canEdit={canEdit}
-            saveProfileImage={saveProfileImage}
-          />
-          <p className="mb-4">
-            {profile?.first_name} {profile?.last_name}
-          </p>
-          {profile && <ProfileDetails profile={profile} />}
-          {!!profile ? (
-            <ProfileBioEditor
-              user={profile}
-              updateUserBio={saveProfileBio}
-              canEdit={canEdit}
-            />
+        <section className="w-9/12 mx-auto mb-8">
+          {profile ? (
+            <UserInfo userProfile={profile} canEdit={canEdit} />
           ) : (
             <></>
           )}
         </section>
         <section>
-          <p className="mb-3">Latest posts</p>
+          <div className="flex items-center justify-between gap-4 mb-3">
+            <p className="whitespace-nowrap">Latest posts</p>
+            <div className="w-full bg-blog-blue h-[1px]"></div>
+          </div>
           <article className="grid grid-cols-auto-fill-350 autofill:250 gap-y-8 gap-x-6">
             {profile?.posts.map((post) => (
               <Link key={post.id} href={`/post/${post.id}`}>

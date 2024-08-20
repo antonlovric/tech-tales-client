@@ -25,7 +25,7 @@ const Posts = async ({ searchParams }: IPostsPage) => {
   );
   const activePageNumber: number = parseInt(searchParams?.activePage || '1');
 
-  const pageSize: number = parseInt(searchParams?.pageSize || '6');
+  const pageSize: number = parseInt(searchParams?.pageSize || '5');
   const postsRes = await customFetch(
     `${process.env.NEXT_PUBLIC_API_URL}/posts?search=${encodeURIComponent(
       parsedSearchQuery

@@ -1,5 +1,7 @@
 'use client';
 import React, { useState } from 'react';
+import { handleSignIn } from '../actions/users';
+import { redirect } from 'next/navigation';
 
 export interface IUserSignInForm {
   email: string;
@@ -7,11 +9,10 @@ export interface IUserSignInForm {
 }
 
 interface ISignInForm {
-  handleSignIn: (user: IUserSignInForm) => void;
   errorMessage?: string;
 }
 
-const SignInForm = ({ handleSignIn, errorMessage }: ISignInForm) => {
+const SignInForm = ({ errorMessage }: ISignInForm) => {
   const [formValues, setFormValues] = useState<IUserSignInForm>({
     email: '',
     password: '',
@@ -28,8 +29,16 @@ const SignInForm = ({ handleSignIn, errorMessage }: ISignInForm) => {
     }
   }
 
-  function submitUser() {
-    handleSignIn(formValues);
+  async function submitUser() {
+    try {
+      await handleSignIn(formValues);
+      redirect('/');
+    } catch (error: any) {
+      console.error(error);
+      if (error?.message) {
+        alert(error?.message);
+      }
+    }
   }
 
   return (

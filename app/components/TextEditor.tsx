@@ -27,7 +27,7 @@ const TextEditor = ({ categories, post }: ITextEditor) => {
     injectCSS: false,
     editorProps: {
       attributes: {
-        class: 'px-1 py-1',
+        class: 'px-2 py-2',
       },
     },
   });
@@ -38,7 +38,7 @@ const TextEditor = ({ categories, post }: ITextEditor) => {
     injectCSS: false,
     editorProps: {
       attributes: {
-        class: 'px-1 py-1',
+        class: 'px-2 py-2 border border-light-gray border-solid rounded-md',
       },
     },
   });
@@ -48,7 +48,7 @@ const TextEditor = ({ categories, post }: ITextEditor) => {
     content: post?.html_content || '<p>Hello World! 🌎️</p>',
     editorProps: {
       attributes: {
-        class: 'px-1 py-1',
+        class: 'px-2 py-2 border border-light-gray border-solid rounded-md',
       },
     },
   });
@@ -183,7 +183,7 @@ const TextEditor = ({ categories, post }: ITextEditor) => {
       ) : (
         <div className="w-full flex justify-center relative py-5">
           <label className="pointer" htmlFor="cover-image">
-            <div className="bg-blog-blue text-dark-gray w-[400px] h-[250px] flex items-center justify-center cursor-pointer">
+            <div className="bg-blog-blue text-dark-gray w-[400px] h-[250px] flex items-center justify-center cursor-pointer rounded-md">
               <span className="material-symbols-outlined !text-8xl">image</span>
             </div>
           </label>
