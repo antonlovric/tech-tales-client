@@ -22,6 +22,7 @@ const TextEditor = ({ categories, post }: ITextEditor) => {
   const [file, setFile] = useState<File | null>(null);
   const [isCreating, setIsCreating] = useState(false);
   const router = useRouter();
+  const isCoverImageChanged = useRef(false);
   const titleEditor = useEditor({
     extensions: [StarterKit, CharacterCount.configure({ limit: 100 })],
     content: post?.title || '<h1>This is the title of your article!</h1>',
@@ -68,7 +69,17 @@ const TextEditor = ({ categories, post }: ITextEditor) => {
     };
   }, []);
 
+  async function getImagePath() {
+    if (file) {
+      if (isCoverImageChanged.current) return await uploadImage(file);
+    }
+    return post?.cover_image || '';
+  }
+
   const handleSubmit = async () => {
+    const imagePath = await getImagePath();
+    console.log(isCoverImageChanged.current);
+    console.log(imagePath);
     if (post) {
       try {
         setIsCreating(true);
@@ -78,10 +89,12 @@ const TextEditor = ({ categories, post }: ITextEditor) => {
           html_content: bodyEditor?.getHTML() || '',
           summary: summaryEditor?.getHTML() || '',
           title: titleEditor?.getHTML() || '',
+          coverImagePath: isCoverImageChanged.current ? imagePath : undefined,
         });
       } catch (error) {
         console.error(error);
       } finally {
+        router.replace('/');
         setIsCreating(false);
         return;
       }
@@ -89,7 +102,6 @@ const TextEditor = ({ categories, post }: ITextEditor) => {
 
     try {
       setIsCreating(true);
-      const imagePath = file ? await uploadImage(file) : '';
       shouldDeleteImages.current = false;
 
       await createPost({
@@ -134,6 +146,7 @@ const TextEditor = ({ categories, post }: ITextEditor) => {
       reader.onloadend = async () => {
         if (reader.result && typeof reader.result === 'string') {
           setCoverImage(reader.result);
+          isCoverImageChanged.current = true;
         }
       };
       reader.readAsDataURL(image);
