@@ -173,7 +173,7 @@ const TextEditor = ({ categories, post }: ITextEditor) => {
               <span className="material-symbols-outlined">close</span>
             </button>
             <Image
-              src={coverImage}
+              src={coverImage || ''}
               alt=""
               width={400}
               height={200}
