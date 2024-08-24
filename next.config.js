@@ -3,6 +3,14 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'tech-tales.s3.eu-central-1.amazonaws.com',
+      },
+    ],
+  },
   async headers() {
     return [
       {

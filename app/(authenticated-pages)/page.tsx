@@ -4,6 +4,7 @@ import { getSanitizedHtml } from '../helpers/global';
 import Link from 'next/link';
 import { customFetch } from '../helpers/auth';
 import { Inter } from 'next/font/google';
+import Image from 'next/image';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -12,15 +13,6 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const relevantPostRes = await customFetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/analytics/relevant_post`,
-    {
-      method: 'GET',
-    }
-  );
-
-  const relevantPost = relevantPostRes.ok ? await relevantPostRes.json() : null;
-
   const postsByCategoryRes = await customFetch(
     `${process.env.NEXT_PUBLIC_API_URL}/posts/categories`,
     {
@@ -40,13 +32,7 @@ export default async function Home() {
         <span className="text-blog-blue"> one post at a time</span>
       </h1>
       <main>
-        {relevantPost ? (
-          <Link href={`/post/${relevantPost.id}`}>
-            <FeaturedPost post={relevantPost} />
-          </Link>
-        ) : (
-          <></>
-        )}
+        <FeaturedPost />
       </main>
       {filteredPostCategories.map((category) => (
         <section className="flex flex-col gap-2 mt-6 pb-4" key={category.id}>
@@ -66,10 +52,12 @@ export default async function Home() {
                 className="bg-dark-gray rounded-md p-2 cursor-pointer h-full flex flex-col justify-between relative"
                 key={`${post.categories.id}-${post.posts.id}`}
               >
-                <img
+                <Image
                   src={post.posts.cover_image || ''}
                   alt=""
                   className="block rounded-md h-[250px] w-full object-cover"
+                  height={350}
+                  width={600}
                 />
                 <span
                   dangerouslySetInnerHTML={{

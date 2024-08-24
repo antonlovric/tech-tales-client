@@ -2,6 +2,7 @@ import React from 'react';
 import { exo } from '@/app/layout';
 import { Metadata } from 'next';
 import SignInForm from '@/app/components/SignInForm';
+import Image from 'next/image';
 
 export const metadata: Metadata = {
   title: 'Tech Tales | Sign in',
@@ -22,14 +23,23 @@ const SignInPage = async () => {
             Create your own tale
           </h2>
         </div>
-        <img
+        <Image
           alt="People standing in a room with computers"
           src={'/auth-image.jpg'}
-          className="h-full"
+          height={0}
+          width={0}
+          layout="fill"
+          objectFit="cover"
         />
       </div>
       <div className="flex flex-col w-1/3 gap-4 items-center justify-center col-span-2 mx-auto my-auto bg-dark-gray h-max p-6 rounded-lg">
-        <img alt="" src={'/logo-no-background.svg'} className="w-full mb-4" />
+        <Image
+          alt=""
+          src={'/logo-no-background.svg'}
+          className="w-full mb-4"
+          height={50}
+          width={300}
+        />
         <SignInForm />
       </div>
     </main>

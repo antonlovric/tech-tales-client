@@ -4,6 +4,7 @@ import ProfileImage from '@/app/components/UI/ProfileImage';
 import { customFetch, getActiveUser } from '@/app/helpers/auth';
 import { formatDate } from '@/app/helpers/global';
 import DOMPurify from 'isomorphic-dompurify';
+import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 
@@ -89,7 +90,9 @@ const Post = async ({ params }: IPostPage) => {
             <></>
           )}
         </div>
-        <img
+        <Image
+          height={500}
+          width={1200}
           src={post?.cover_image || ''}
           alt="Post cover image"
           className="my-2"
