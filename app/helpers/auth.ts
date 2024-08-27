@@ -37,7 +37,7 @@ export function setAccessToken(token = '') {
 }
 
 export function setRefreshToken(token = '') {
-  cookies().set('accessToken', token, {
+  cookies().set('refreshToken', token, {
     httpOnly: true,
     sameSite: true,
     value: token,
